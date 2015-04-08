@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-Date::Utility
+Date::Utility - FIX desc
 
 =head1 VERSION
 
@@ -835,7 +835,7 @@ sub months_ahead {
 Static method returns a standard mapping from month numbers to our 3
 character abbreviated format.
 
-=cut 
+=cut
 
 my %number_abbrev_map = (
     1  => 'Jan',
@@ -867,7 +867,7 @@ sub month_number_to_abbrev {
 Static method returns a standard mapping from 3
 character abbreviated format to month numbers
 
-=cut 
+=cut
 
 sub month_abbrev_to_number {
 

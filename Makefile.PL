@@ -22,6 +22,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Moose'                              => 0,
+        'DateTime'                           => 0,
         'Carp'                               => 0,
         'POSIX'                              => 0,
         'Scalar::Util'                       => 0,
