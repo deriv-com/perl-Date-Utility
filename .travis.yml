@@ -17,5 +17,6 @@ before_install:
     - "cpanm Time::Local"
     - "cpanm Try::Tiny"
     - "cpanm Time::Duration::Concise::Localize"
+    - "cpanm Devel::Cover::Report::Coveralls"
 script:
     perl Makefile.PL && make test && cover -test -report coveralls

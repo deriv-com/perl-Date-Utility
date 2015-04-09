@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-Date::Utility - FIX desc
+Date::Utility - A class that represents a datetime in various format
 
 =head1 VERSION
 
@@ -23,15 +23,15 @@ our $VERSION = '1.00';
 
     Date::Utility->new(); # Use current time
     Date::Utility->new(1249637400);
-    Date::Utility->new(dd-mmm-yy);
-    Date::Utility->new(dd-mmm-yyyy);
+    Date::Utility->new('dd-mmm-yy');
+    Date::Utility->new('dd-mmm-yyyy');
     Date::Utility->new('dd-Mmm-yy hh:mm:ssGMT');
-    Date::Utility-new('dd-Mmm-yy hhhmm');
-    Date::Utility->new(YYYY-MM-DD);
-    Date::Utility->new(YYYYMMDD);
-    Date::Utility->new(YYYYMMDDHHMMSS);
-    Date::Utility->new(YYYY-MM-DD HH:MM:SS);
-    Date::Utility->new(YYYY-MM-DDTHH:MM:SSZ);
+    Date::Utility->new('dd-Mmm-yy hhhmm');
+    Date::Utility->new('YYYY-MM-DD');
+    Date::Utility->new('YYYYMMDD');
+    Date::Utility->new('YYYYMMDDHHMMSS');
+    Date::Utility->new('YYYY-MM-DD HH:MM:SS');
+    Date::Utility->new('YYYY-MM-DDTHH:MM:SSZ');
 
 =head1 DESCRIPTION
 
@@ -52,9 +52,6 @@ use Time::Duration::Concise::Localize;
 my %popular;
 my $lru = tie %popular, 'Tie::Hash::LRU', 300;
 
-=head1 ATTRIBUTES
-
-=cut
 
 has epoch => (
     is       => 'ro',
@@ -114,8 +111,10 @@ sub _build__gmtime_attrs {
 
     return \%params;
 }
+=head1 ATTRIBUTES
 
 =head2 second
+
 =cut
 
 sub _build_second {
@@ -125,6 +124,7 @@ sub _build_second {
 }
 
 =head2 minute
+
 =cut
 
 sub _build_minute {
@@ -134,6 +134,7 @@ sub _build_minute {
 }
 
 =head2 hour
+
 =cut
 
 sub _build_hour {
@@ -143,6 +144,7 @@ sub _build_hour {
 }
 
 =head2 day_of_month
+
 =cut
 
 sub _build_day_of_month {
@@ -152,6 +154,7 @@ sub _build_day_of_month {
 }
 
 =head2 month
+
 =cut
 
 sub _build_month {
@@ -191,6 +194,7 @@ sub _build_year {
 }
 
 =head2 time
+
 =cut
 
 sub _build_time {
@@ -200,6 +204,9 @@ sub _build_time {
 }
 
 =head2 time_hhmm
+
+Returns time in hh:mm format
+
 =cut
 
 sub _build_time_hhmm {
@@ -209,6 +216,9 @@ sub _build_time_hhmm {
 }
 
 =head2 time_hhmmss
+
+Returns time in hh:mm:ss format
+
 =cut
 
 sub _build_time_hhmmss {
@@ -220,6 +230,7 @@ sub _build_time_hhmmss {
 =head2 time_cutoff
 
 Set the timezone for cutoff to UTC
+
 =cut
 
 sub _build_time_cutoff {
@@ -229,6 +240,8 @@ sub _build_time_cutoff {
 }
 
 =head2 year_in_two_digit
+
+Returns year in two digit format. Example: 15
 
 =cut
 
@@ -291,7 +304,7 @@ sub _build_datetime_ddmmmyy_hhmmss {
 
 =head2 date_ddmmmyyyy
 
-Returns datetime in dd-mmm-yyyy format
+Returns date in dd-mmm-yyyy format
 
 =cut
 
@@ -304,7 +317,6 @@ sub _build_date_ddmmmyyyy {
 =head2 date
 
 Returns datetime in YYYY-MM-DD format
-
 
 =cut
 
