@@ -19,6 +19,7 @@ WriteMakefile(
         'Test::NoWarnings' => 0,
         'Test::Exception'  => 0,
         'Test::MockTime'   => 0,
+        'Test::Most'       => 0,
     },
     PREREQ_PM => {
         'Moose'                              => 0,
@@ -29,7 +30,7 @@ WriteMakefile(
         'Tie::Hash::LRU'                     => 0,
         'Time::Local'                        => 0,
         'Try::Tiny'                          => 0,
-        'Time::Duration::Concise::Localize'  => 0,
+        'Time::Duration::Concise::Localize'  => 2.5,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Date-Utility-*' },
