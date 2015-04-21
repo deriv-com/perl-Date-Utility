@@ -1,7 +1,5 @@
 sudo: false
 language: perl
-services:
-    - redis-server
 perl:
     - "5.18"
     - "5.16"
