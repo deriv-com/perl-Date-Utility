@@ -1,4 +1,4 @@
-use 5.006;
+use 5.010;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -10,7 +10,7 @@ WriteMakefile(
     ABSTRACT_FROM    => 'lib/Date/Utility.pm',
     LICENSE          => 'artistic_2',
     PL_FILES         => {},
-    MIN_PERL_VERSION => 5.006,
+    MIN_PERL_VERSION => 5.010,
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
     },
@@ -29,6 +29,7 @@ WriteMakefile(
         'Scalar::Util'                       => 0,
         'Tie::Hash::LRU'                     => 0,
         'Time::Local'                        => 0,
+        'Time::Piece'                        => 0,
         'Try::Tiny'                          => 0,
         'Time::Duration::Concise::Localize'  => 2.5,
     },
