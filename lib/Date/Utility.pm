@@ -931,15 +931,26 @@ sub truncate_to_day {
     return $popular{$tepoch} // Date::Utility->new($tepoch);
 }
 
-=head2 get_nth_day_of_week
+=head2 move_to_nth_dow
 
-Returns undefined or a Date::Utility object pointing to nth day of week of the current month
+Returns undef or a Date::Utility object pointing to nth day of week of the current month.
+$dow is a three letter abbreviation of weekday names.
 
 =cut
 
 sub get_nth_day_of_week {
-    my ($self, $nth, $dow) = @_;
+    my ($self, $nth, $dow_abb) = @_;
     use Time::Local qw/timegm/;
+
+    my %abb_map=(   'mon' => 1,
+                    'tue' => 2,
+                    'wed' => 3,
+                    'thu' => 4,
+                    'fri' => 5,
+                    'sat' => 6,
+                    'sun' => 7 );
+
+    my $dow = $abb_map{lc $dow_abb} or croak 'Invalid day of week. We got ['.$dow_abb.']';
 
     $dow %= 7;     # accept both 0 and 7 as Sunday
     my $time = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);

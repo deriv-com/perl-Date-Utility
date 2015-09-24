@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 52;
+use Test::More tests => 53;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -86,5 +86,7 @@ is($datetime1->minus_time_interval(0),                             $datetime1, '
 is($datetime2->minus_time_interval('-1d')->is_same_as($datetime3), 1,          'minus_time_interval("-1d") yields one day ahead.');
 throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
 
-is($datetime1->get_nth_day_of_week(3, 3)->day_of_month, 21, 'nth_day_of_week(3, 3) is correct');
-is($datetime1->get_nth_day_of_week(5, 3), undef, 'nth_day_of_week correctly returns undef for out of month result');
+is($datetime1->get_nth_day_of_week(3, 'Wed')->day_of_month, 21, 'nth_day_of_week(3, 3) is correct');
+is($datetime1->get_nth_day_of_week(5, 'Wed'), undef, 'nth_day_of_week correctly returns undef for out of month result');
+dies_ok { $datetime1->get_nth_day_of_week(1, 'abc') } 'Failing for invalid day of week names';
+
