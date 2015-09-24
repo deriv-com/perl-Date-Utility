@@ -931,6 +931,27 @@ sub truncate_to_day {
     return $popular{$tepoch} // Date::Utility->new($tepoch);
 }
 
+=head2 get_nth_day_of_week
+
+Returns undefined or a Date::Utility object pointing to nth day of week of the current month
+
+=cut
+
+sub get_nth_day_of_week {
+    my ($self, $nth, $dow) = @_;
+    use Time::Local qw/timegm/;
+
+    $dow %= 7;     # accept both 0 and 7 as Sunday
+    my $time = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
+    my $_dow = (gmtime $time)[6];    # 0 - Sun .. 6 - Sat
+    my $days_add = ($dow + 7 - $_dow) % 7 + ($nth - 1) * 7;
+
+    my $result = Date::Utility->new($time + 24 * 3600 * $days_add);
+
+    return unless $result->month == $self->month;
+    return $result;
+}
+
 =head2 today
 
 Returns Date::Utility object for the start of the current day. Much faster than
