@@ -940,7 +940,6 @@ sub move_to_nth_dow {
 
     my $dow = $day_abbrev_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
-    $dow %= 7;               # accept both 0 and 7 as Sunday
     my $time     = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
     my $_dow     = (gmtime $time)[6];                                          # 0 - Sun .. 6 - Sat
     my $days_add = ($dow + 7 - $_dow) % 7 + ($nth - 1) * 7;

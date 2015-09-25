@@ -87,7 +87,7 @@ is($datetime2->minus_time_interval('-1d')->is_same_as($datetime3), 1,          '
 throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
 
 subtest 'move_to_nth_dow' => sub {
-    is($datetime1->move_to_nth_dow(3, 'Wed')->day_of_month, 21, 'Third Wednesday of Dec 2012 is the 21st');
+    is($datetime1->move_to_nth_dow(3, 'Wed')->day_of_month, 21, 'Third Wednesday of Dec 2011 is the 21st');
     is($datetime1->move_to_nth_dow(5, 'Wed'), undef, '... and there is no 5th Wednesday that year.');
     throws_ok { $datetime1->move_to_nth_dow(1, 'abc') } qr/Invalid day/, 'Failing for invalid day of week names';
 };
