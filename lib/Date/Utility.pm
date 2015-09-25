@@ -591,11 +591,15 @@ Returns the name of the current day. Example: Sunday
 =cut
 
 # 0..6: Sunday first.
-my @day_names = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
-my %day_abbrev_to_num;
-foreach my $day_num (0 .. $#day_names) {
-    $day_abbrev_to_num{lc substr($day_names[$day_num], 0, 3)} = $day_num;
-}
+my @day_names   = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
+my %days_to_num = map {
+    my $day = lc $day_names[$_];
+    (
+        substr($day, 0, 3) => $_,    # Three letter abbreviation
+        $day => $_,                  # Full day name
+        $_   => $_,                  # Number as number
+    );
+} 0 .. $#day_names;
 
 sub _build_full_day_name {
     my $self = shift;
@@ -938,7 +942,7 @@ sub move_to_nth_dow {
 
     $dow_abb //= 'undef';    # For nicer error reporting below.
 
-    my $dow = $day_abbrev_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
+    my $dow = $days_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
     my $time     = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
     my $_dow     = (gmtime $time)[6];                                          # 0 - Sun .. 6 - Sat
