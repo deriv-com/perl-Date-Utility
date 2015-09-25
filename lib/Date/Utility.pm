@@ -44,7 +44,7 @@ use DateTime;
 use POSIX qw( floor );
 use Scalar::Util qw(looks_like_number);
 use Tie::Hash::LRU;
-use Time::Local qw(timegm_nocheck);
+use Time::Local qw(timegm);
 use Try::Tiny;
 use Time::Duration::Concise::Localize;
 
@@ -499,7 +499,7 @@ sub _parse_datetime_param {
         $year += ($year <= 30) ? 2000 : 1900;
     }
 
-    my $epoch = timegm_nocheck($second, $minute, $hour, $day, $month - 1, $year);
+    my $epoch = timegm($second, $minute, $hour, $day, $month - 1, $year);
 
     return {
         epoch        => $epoch,
@@ -856,22 +856,16 @@ An exception is thrown on improper day of week representations.
 
 sub move_to_nth_dow {
     my ($self, $nth, $dow_abb) = @_;
-    use Time::Local qw/timegm/;
 
     $dow_abb //= 'undef';    # For nicer error reporting below.
 
-    my $dow = $days_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
+    my $dow = $days_to_num{lc $dow_abb} // croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
-    my $time     = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
-    my $_dow     = (gmtime $time)[6];                                          # 0 - Sun .. 6 - Sat
-    my $days_add = ($dow + 7 - $_dow) % 7 + ($nth - 1) * 7;
+    my $dow_first = ($self->day_of_month - $self->day_of_week) % 7;
+    my $dom = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
 
-    my $result = Date::Utility->new($time + 24 * 3600 * $days_add);
-
-    return unless $result->month == $self->month && $result->year == $self->year;
-    return $result;
+    return try { Date::Utility->new(join '-', $self->year, $self->month, $dom) };
 }
-
 
 =head1 STATIC METHODS
 
