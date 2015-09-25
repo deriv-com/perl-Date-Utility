@@ -868,7 +868,7 @@ sub move_to_nth_dow {
 
     my $result = Date::Utility->new($time + 24 * 3600 * $days_add);
 
-    return unless $result->month == $self->month;
+    return unless $result->month == $self->month && $result->year == $self->year;
     return $result;
 }
 
