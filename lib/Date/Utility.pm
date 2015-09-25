@@ -16,7 +16,6 @@ Version 1.03
 
 our $VERSION = '1.03';
 
-
 =head1 SYNOPSIS
 
     use Date::Utility;
@@ -51,7 +50,6 @@ use Time::Duration::Concise::Localize;
 
 my %popular;
 my $lru = tie %popular, 'Tie::Hash::LRU', 300;
-
 
 has epoch => (
     is       => 'ro',
@@ -111,6 +109,7 @@ sub _build__gmtime_attrs {
 
     return \%params;
 }
+
 =head1 ATTRIBUTES
 
 =head2 second
@@ -397,8 +396,7 @@ sub new {
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    }
-    elsif (ref $params_ref eq 'Date::Utility') {
+    } elsif (ref $params_ref eq 'Date::Utility') {
         return $params_ref;
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
@@ -592,20 +590,17 @@ Returns the name of the current day. Example: Sunday
 
 =cut
 
+# 0..6: Sunday first.
+my @day_names = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
+my %day_abbrev_to_num;
+foreach my $day_num (0 .. $#day_names) {
+    $day_abbrev_to_num{lc substr($day_names[$day_num], 0, 3)} = $day_num;
+}
+
 sub _build_full_day_name {
     my $self = shift;
 
-    my %day_names = (
-        0 => 'Sunday',
-        1 => 'Monday',
-        2 => 'Tuesday',
-        3 => 'Wednesday',
-        4 => 'Thursday',
-        5 => 'Friday',
-        6 => 'Saturday',
-    );
-
-    return $day_names{$self->day_of_week};
+    return $day_names[$self->day_of_week];
 }
 
 =head2 month_as_string
@@ -793,7 +788,6 @@ Will also attempt to create a TimeInterval from a supplied code, if possible.
 
 =cut
 
-
 sub minus_time_interval {
     my ($self, $ti) = @_;
 
@@ -938,23 +932,17 @@ $dow is a three letter abbreviation of weekday names.
 
 =cut
 
-sub get_nth_day_of_week {
+sub move_to_nth_dow {
     my ($self, $nth, $dow_abb) = @_;
     use Time::Local qw/timegm/;
 
-    my %abb_map=(   'mon' => 1,
-                    'tue' => 2,
-                    'wed' => 3,
-                    'thu' => 4,
-                    'fri' => 5,
-                    'sat' => 6,
-                    'sun' => 7 );
+    $dow_abb //= 'undef';    # For nicer error reporting below.
 
-    my $dow = $abb_map{lc $dow_abb} or croak 'Invalid day of week. We got ['.$dow_abb.']';
+    my $dow = $day_abbrev_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
-    $dow %= 7;     # accept both 0 and 7 as Sunday
-    my $time = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
-    my $_dow = (gmtime $time)[6];    # 0 - Sun .. 6 - Sat
+    $dow %= 7;               # accept both 0 and 7 as Sunday
+    my $time     = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
+    my $_dow     = (gmtime $time)[6];                                          # 0 - Sun .. 6 - Sat
     my $days_add = ($dow + 7 - $_dow) % 7 + ($nth - 1) * 7;
 
     my $result = Date::Utility->new($time + 24 * 3600 * $days_add);

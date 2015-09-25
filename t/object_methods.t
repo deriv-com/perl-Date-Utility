@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 53;
+use Test::More tests => 51;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -11,7 +11,7 @@ my $base_date = Date::Utility->new({epoch => $baseline});
 my $later_date =
     Date::Utility->new({epoch => $baseline + (86400 * 2) + (3600 * 3) + (60 * 8) + 14});    # Two days, 3 hours, 8 minutes and 14 seconds later.
 my $earlier_date =
-    Date::Utility->new({epoch => $baseline - (86400 * 6) + (3600 * 1) + (60 * 12) + 22});   # 6 days, 1 hour,  12 minutes and 22 seconds earlier.
+    Date::Utility->new({epoch => $baseline - (86400 * 6) + (3600 * 1) + (60 * 12) + 22});    # 6 days, 1 hour,  12 minutes and 22 seconds earlier.
 
 is($base_date->days_between($base_date),     0,  'base to base days_between');
 is($base_date->days_between($earlier_date),  6,  'base to earlier days_between');
@@ -86,7 +86,10 @@ is($datetime1->minus_time_interval(0),                             $datetime1, '
 is($datetime2->minus_time_interval('-1d')->is_same_as($datetime3), 1,          'minus_time_interval("-1d") yields one day ahead.');
 throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
 
-is($datetime1->get_nth_day_of_week(3, 'Wed')->day_of_month, 21, 'nth_day_of_week(3, 3) is correct');
-is($datetime1->get_nth_day_of_week(5, 'Wed'), undef, 'nth_day_of_week correctly returns undef for out of month result');
-dies_ok { $datetime1->get_nth_day_of_week(1, 'abc') } 'Failing for invalid day of week names';
+subtest 'move_to_nth_dow' => sub {
+    is($datetime1->move_to_nth_dow(3, 'Wed')->day_of_month, 21, 'Third Wednesday of Dec 2012 is the 21st');
+    is($datetime1->move_to_nth_dow(5, 'Wed'), undef, '... and there is no 5th Wednesday that year.');
+    throws_ok { $datetime1->move_to_nth_dow(1, 'abc') } qr/Invalid day/, 'Failing for invalid day of week names';
+};
 
+1;

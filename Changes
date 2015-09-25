@@ -1,7 +1,7 @@
 Revision history for Date-Utility
 
 1.03    25/10/2015
-        Added get_nth_day_of_week method
+        Added move_to_nth_dow method
 
 1.02	22/10/2015
 	Corrected a number of cases where tests failed
