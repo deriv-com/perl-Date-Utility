@@ -1,6 +1,6 @@
 Revision history for Date-Utility
 
-1.02	22/10/2015
+1.02	25/09/2015
 	Corrected a number of cases where tests failed
 	Bumping min perl version up to 5.10
 
