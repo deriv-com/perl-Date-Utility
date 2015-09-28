@@ -159,6 +159,10 @@ new_ok(
     'Date::Utility' => ['2014-11-11'],
     'new style YYYYMMDD object'
 );
+new_ok(
+    'Date::Utility' => ['2014-1-1'],
+    'new style YYYYMD object'
+);
 
 ## Test case to test if Date::Utility can take Date::Utility as an instance
 

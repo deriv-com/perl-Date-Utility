@@ -44,7 +44,7 @@ use DateTime;
 use POSIX qw( floor );
 use Scalar::Util qw(looks_like_number);
 use Tie::Hash::LRU;
-use Time::Local qw(timegm_nocheck);
+use Time::Local qw(timegm);
 use Try::Tiny;
 use Time::Duration::Concise::Localize;
 
@@ -499,7 +499,7 @@ sub _parse_datetime_param {
         $year += ($year <= 30) ? 2000 : 1900;
     }
 
-    my $epoch = timegm_nocheck($second, $minute, $hour, $day, $month - 1, $year);
+    my $epoch = timegm($second, $minute, $hour, $day, $month - 1, $year);
 
     return {
         epoch        => $epoch,
@@ -591,11 +591,15 @@ Returns the name of the current day. Example: Sunday
 =cut
 
 # 0..6: Sunday first.
-my @day_names = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
-my %day_abbrev_to_num;
-foreach my $day_num (0 .. $#day_names) {
-    $day_abbrev_to_num{lc substr($day_names[$day_num], 0, 3)} = $day_num;
-}
+my @day_names   = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
+my %days_to_num = map {
+    my $day = lc $day_names[$_];
+    (
+        substr($day, 0, 3) => $_,    # Three letter abbreviation
+        $day => $_,                  # Full day name
+        $_   => $_,                  # Number as number
+    );
+} 0 .. $#day_names;
 
 sub _build_full_day_name {
     my $self = shift;
@@ -834,6 +838,35 @@ sub months_ahead {
     return month_number_to_abbrev($new_month) . '-' . $new_year;
 }
 
+=head2 move_to_nth_dow
+
+Takes an integer as an ordinal and a day of week representation
+
+The following are all equivalent:
+C<move_to_nth_dow(3, 'Monday')>
+C<move_to_nth_dow(3, 'Mon')>
+C<move_to_nth_dow(3, 1)>
+
+Returning the 3rd Monday of the month represented by the object or
+C<undef> if it does not exist.
+
+An exception is thrown on improper day of week representations.
+
+=cut
+
+sub move_to_nth_dow {
+    my ($self, $nth, $dow_abb) = @_;
+
+    $dow_abb //= 'undef';    # For nicer error reporting below.
+
+    my $dow = $days_to_num{lc $dow_abb} // croak 'Invalid day of week. We got [' . $dow_abb . ']';
+
+    my $dow_first = ($self->day_of_month - $self->day_of_week) % 7;
+    my $dom = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
+
+    return try { Date::Utility->new(join '-', $self->year, $self->month, $dom) };
+}
+
 =head1 STATIC METHODS
 
 =head2 month_number_to_abbrev
@@ -923,31 +956,6 @@ sub truncate_to_day {
     my $tepoch = $epoch - $epoch % 86400;
 
     return $popular{$tepoch} // Date::Utility->new($tepoch);
-}
-
-=head2 move_to_nth_dow
-
-Returns undef or a Date::Utility object pointing to nth day of week of the current month.
-$dow is a three letter abbreviation of weekday names.
-
-=cut
-
-sub move_to_nth_dow {
-    my ($self, $nth, $dow_abb) = @_;
-    use Time::Local qw/timegm/;
-
-    $dow_abb //= 'undef';    # For nicer error reporting below.
-
-    my $dow = $day_abbrev_to_num{lc $dow_abb} or croak 'Invalid day of week. We got [' . $dow_abb . ']';
-
-    my $time     = timegm(0, 0, 0, 1, $self->month - 1, $self->year - 1900);
-    my $_dow     = (gmtime $time)[6];                                          # 0 - Sun .. 6 - Sat
-    my $days_add = ($dow + 7 - $_dow) % 7 + ($nth - 1) * 7;
-
-    my $result = Date::Utility->new($time + 24 * 3600 * $days_add);
-
-    return unless $result->month == $self->month;
-    return $result;
 }
 
 =head2 today
