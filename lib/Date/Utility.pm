@@ -16,7 +16,6 @@ Version 1.02
 
 our $VERSION = '1.02';
 
-
 =head1 SYNOPSIS
 
     use Date::Utility;
@@ -51,7 +50,6 @@ use Time::Duration::Concise::Localize;
 
 my %popular;
 my $lru = tie %popular, 'Tie::Hash::LRU', 300;
-
 
 has epoch => (
     is       => 'ro',
@@ -111,6 +109,7 @@ sub _build__gmtime_attrs {
 
     return \%params;
 }
+
 =head1 ATTRIBUTES
 
 =head2 second
@@ -397,8 +396,7 @@ sub new {
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    }
-    elsif (ref $params_ref eq 'Date::Utility') {
+    } elsif (ref $params_ref eq 'Date::Utility') {
         return $params_ref;
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
@@ -793,7 +791,6 @@ Will also attempt to create a TimeInterval from a supplied code, if possible.
 
 =cut
 
-
 sub minus_time_interval {
     my ($self, $ti) = @_;
 
@@ -959,7 +956,7 @@ __PACKAGE__->meta->make_immutable(
     constructor_name    => '_new',
     replace_constructor => 1
 );
-
+1;
 __END__
 
 =head1 DEPENDENCIES
@@ -1063,4 +1060,3 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1;
