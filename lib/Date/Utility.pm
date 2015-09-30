@@ -861,7 +861,7 @@ sub move_to_nth_dow {
 
     my $dow = $days_to_num{lc $dow_abb} // croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
-    my $dow_first = ($self->day_of_month - $self->day_of_week) % 7;
+    my $dow_first = (7 - ($self->day_of_month - 1 - $self->day_of_week)) % 7;
     my $dom = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
 
     return try { Date::Utility->new(join '-', $self->year, $self->month, $dom) };

@@ -109,6 +109,31 @@ subtest 'move_to_nth_dow' => sub {
     is($datetime1->move_to_nth_dow(1,   'THU')->day_of_month,      1,     '... and a first Thursday.');
     throws_ok { $datetime1->move_to_nth_dow(1, 'abc') } qr/Invalid day/, 'Failing for invalid day of week names';
     throws_ok { $datetime1->move_to_nth_dow(1, 7) } qr/Invalid day/,     'Does not handle Sunday as day 7';
+    subtest 'stress test' => sub {
+        my $today = Date::Utility->today;
+        my $d     = Date::Utility->new($today->year . '-' . $today->month . '-01 12:00');
+        my @dow;
+        my $M = '';
+        for (0 .. 4e2 - 1) {
+            unless ($M eq $d->year . $d->month) {
+                $M   = $d->year . $d->month;
+                @dow = ();
+            }
+            $dow[$d->day_of_week]++;
+            foreach my $base (1 .. 20) {
+                my $base_date = Date::Utility->new(join '-', $d->year, $d->month, $base);
+                is +Date::Utility->new(join '-', $d->year, $d->month, $base)->move_to_nth_dow($dow[$d->day_of_week], $d->day_of_week)->date, $d->date,
+                      'Move from '
+                    . $base_date->date . ' to '
+                    . $dow[$d->day_of_week] . ' '
+                    . $d->full_day_name . ' of '
+                    . $d->month_as_string . ' '
+                    . $d->year . ' is '
+                    . $d->date;
+            }
+            $d = $d->plus_time_interval('1d');
+        }
+    };
 };
 
 1;
