@@ -10,12 +10,11 @@ Date::Utility - A class that represents a datetime in various format
 
 =head1 VERSION
 
-Version 1.02
+Version 1.03
 
 =cut
 
-our $VERSION = '1.02';
-
+our $VERSION = '1.03';
 
 =head1 SYNOPSIS
 
@@ -45,13 +44,12 @@ use DateTime;
 use POSIX qw( floor );
 use Scalar::Util qw(looks_like_number);
 use Tie::Hash::LRU;
-use Time::Local qw(timegm_nocheck);
+use Time::Local qw(timegm);
 use Try::Tiny;
 use Time::Duration::Concise::Localize;
 
 my %popular;
 my $lru = tie %popular, 'Tie::Hash::LRU', 300;
-
 
 has epoch => (
     is       => 'ro',
@@ -111,6 +109,7 @@ sub _build__gmtime_attrs {
 
     return \%params;
 }
+
 =head1 ATTRIBUTES
 
 =head2 second
@@ -397,8 +396,7 @@ sub new {
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    }
-    elsif (ref $params_ref eq 'Date::Utility') {
+    } elsif (ref $params_ref eq 'Date::Utility') {
         return $params_ref;
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
@@ -501,7 +499,7 @@ sub _parse_datetime_param {
         $year += ($year <= 30) ? 2000 : 1900;
     }
 
-    my $epoch = timegm_nocheck($second, $minute, $hour, $day, $month - 1, $year);
+    my $epoch = timegm($second, $minute, $hour, $day, $month - 1, $year);
 
     return {
         epoch        => $epoch,
@@ -592,20 +590,21 @@ Returns the name of the current day. Example: Sunday
 
 =cut
 
+# 0..6: Sunday first.
+my @day_names   = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
+my %days_to_num = map {
+    my $day = lc $day_names[$_];
+    (
+        substr($day, 0, 3) => $_,    # Three letter abbreviation
+        $day => $_,                  # Full day name
+        $_   => $_,                  # Number as number
+    );
+} 0 .. $#day_names;
+
 sub _build_full_day_name {
     my $self = shift;
 
-    my %day_names = (
-        0 => 'Sunday',
-        1 => 'Monday',
-        2 => 'Tuesday',
-        3 => 'Wednesday',
-        4 => 'Thursday',
-        5 => 'Friday',
-        6 => 'Saturday',
-    );
-
-    return $day_names{$self->day_of_week};
+    return $day_names[$self->day_of_week];
 }
 
 =head2 month_as_string
@@ -793,7 +792,6 @@ Will also attempt to create a TimeInterval from a supplied code, if possible.
 
 =cut
 
-
 sub minus_time_interval {
     my ($self, $ti) = @_;
 
@@ -838,6 +836,35 @@ sub months_ahead {
     my $new_year = sprintf '%02d', (($current_year + $years_ahead) % 100);
 
     return month_number_to_abbrev($new_month) . '-' . $new_year;
+}
+
+=head2 move_to_nth_dow
+
+Takes an integer as an ordinal and a day of week representation
+
+The following are all equivalent:
+C<move_to_nth_dow(3, 'Monday')>
+C<move_to_nth_dow(3, 'Mon')>
+C<move_to_nth_dow(3, 1)>
+
+Returning the 3rd Monday of the month represented by the object or
+C<undef> if it does not exist.
+
+An exception is thrown on improper day of week representations.
+
+=cut
+
+sub move_to_nth_dow {
+    my ($self, $nth, $dow_abb) = @_;
+
+    $dow_abb //= 'undef';    # For nicer error reporting below.
+
+    my $dow = $days_to_num{lc $dow_abb} // croak 'Invalid day of week. We got [' . $dow_abb . ']';
+
+    my $dow_first = (7 - ($self->day_of_month - 1 - $self->day_of_week)) % 7;
+    my $dom = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
+
+    return try { Date::Utility->new(join '-', $self->year, $self->month, $dom) };
 }
 
 =head1 STATIC METHODS
