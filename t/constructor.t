@@ -22,7 +22,6 @@ throws_ok { Date::Utility->new("2001-12-44") } qr/Invalid datetime format/,     
 throws_ok { Date::Utility->new("2001-12-31 23:59:61") } qr/Invalid datetime format/,           'not accepting 61 as a value for seconds';
 throws_ok { Date::Utility->new('4-Jun-54') } qr/only supports two-digit years from 1970-2030/, 'No two digit years between 30 and 70';
 throws_ok { Date::Utility->new('fake') } qr/Invalid datetime format/,                          'random string is not a date string';
-
 # Passy stuff
 new_ok('Date::Utility');
 new_ok(
@@ -159,6 +158,10 @@ new_ok(
     'Date::Utility' => ['2014-11-11'],
     'new style YYYYMMDD object'
 );
+new_ok(
+    'Date::Utility' => ['2014-1-1'],
+    'new style YYYYMD object'
+);
 
 ## Test case to test if Date::Utility can take Date::Utility as an instance
 
@@ -166,6 +169,19 @@ new_ok(
     'Date::Utility' => [Date::Utility->new('2014-11-11')],
     'new style Date::Utility object'
 );
+
+subtest 'leap years' => sub {
+    throws_ok { Date::Utility->new('2001-02-29') } qr/Day '29' out of range/, 'No leap day in 2001';
+    throws_ok { Date::Utility->new('1900-02-29') } qr/Day '29' out of range/, '... nor in 1900 by the 100 rule';
+    new_ok(
+        'Date::Utility' => ['2000-02-29'],
+        '400 rule for 2000'
+    );
+    new_ok(
+        'Date::Utility' => ['2004-02-29'],
+        '2004'
+    );
+};
 
 Test::NoWarnings::had_no_warnings();
 done_testing;

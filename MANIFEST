@@ -1,6 +1,5 @@
 .travis.yml
 Changes
-Date-Utility-1.00.tar.gz
 lib/Date/Utility.pm
 LICENSE
 Makefile.PL
@@ -9,12 +8,9 @@ README.md
 t/00-load.t
 t/attributes.t
 t/constructor.t
-t/manifest.t
 t/mocktime.t
 t/object_methods.t
 t/perlcritic.t
-t/pod-coverage.t
-t/pod.t
 t/rc/.perlcriticrc
 t/rc/.perltidyrc
 t/static_methods.t
