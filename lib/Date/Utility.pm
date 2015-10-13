@@ -986,7 +986,7 @@ __PACKAGE__->meta->make_immutable(
     constructor_name    => '_new',
     replace_constructor => 1
 );
-
+1;
 __END__
 
 =head1 DEPENDENCIES
@@ -1090,4 +1090,3 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1;

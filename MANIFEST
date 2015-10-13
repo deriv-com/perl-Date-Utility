@@ -8,10 +8,10 @@ README.md
 t/00-load.t
 t/attributes.t
 t/constructor.t
-t/manifest.t
 t/mocktime.t
 t/object_methods.t
-t/pod-coverage.t
-t/pod.t
+t/perlcritic.t
+t/rc/.perlcriticrc
+t/rc/.perltidyrc
 t/static_methods.t
 t/today.t
