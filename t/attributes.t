@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1825;
+use Test::More tests => 1873;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -34,6 +34,7 @@ my %results = (
         time_cutoff                 => 'UTC 02:14',
         timezone                    => 'GMT',
         second                      => '46',
+        quarter                     => '3',
         minute                      => '14',
         hour                        => '02',
         day_of_month                => 6,
@@ -72,6 +73,7 @@ my %results = (
         time_cutoff                 => 'UTC 23:59',
         timezone                    => 'GMT',
         second                      => '00',
+        quarter                     => '1',
         minute                      => '59',
         hour                        => '23',
         day_of_month                => 2,
@@ -111,6 +113,7 @@ my %results = (
         time_cutoff                 => 'UTC 12:34',
         timezone                    => 'GMT',
         second                      => '56',
+        quarter                     => '3',
         minute                      => '34',
         hour                        => '12',
         day_of_month                => 17,
@@ -274,7 +277,7 @@ sub comparisons {
 
     isa_ok($date_obj, 'Date::Utility', 'Object creation for ' . $which);
     foreach my $attr (
-        qw(epoch datetime datetime_ddmmmyy_hhmmss_TZ datetime_yyyymmdd_hhmmss datetime_iso8601 datetime_yyyymmdd_hhmmss_TZ date date_ddmmyy date_ddmmmyyyy date_yyyymmdd day_as_string db_timestamp full_day_name is_a_weekday is_a_weekend iso8601 month_as_string http_expires_format time time_hhmm time_hhmmss time_cutoff timezone second minute hour day_of_month month year year_in_two_digit day_of_week day_of_year days_since_epoch seconds_after_midnight days_in_month is_dst_in_zone timezone_offset)
+        qw(epoch datetime datetime_ddmmmyy_hhmmss_TZ datetime_yyyymmdd_hhmmss datetime_iso8601 datetime_yyyymmdd_hhmmss_TZ date date_ddmmyy date_ddmmmyyyy date_yyyymmdd day_as_string db_timestamp full_day_name is_a_weekday is_a_weekend iso8601 month_as_string http_expires_format time time_hhmm time_hhmmss time_cutoff timezone quarter second minute hour day_of_month month year year_in_two_digit day_of_week day_of_year days_since_epoch seconds_after_midnight days_in_month is_dst_in_zone timezone_offset)
         )
     {
         if ($attr eq 'timezone_offset') {
