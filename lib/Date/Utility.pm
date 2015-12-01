@@ -172,10 +172,9 @@ sub _build_month {
 sub _build_quarter {
     my $self = shift;
 
-   return  int(($self->month - 0.0000001)/3) +1;
+    return int(($self->month - 0.0000001) / 3) + 1;
 
 }
-
 
 =head2 day_of_week
 
