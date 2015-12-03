@@ -1019,6 +1019,7 @@ __END__
 
 =item L<Try::Tiny>
 
+=back
 
 =head1 AUTHOR
 
