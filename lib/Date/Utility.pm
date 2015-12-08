@@ -10,11 +10,11 @@ Date::Utility - A class that represents a datetime in various format
 
 =head1 VERSION
 
-Version 1.04
+Version 1.05
 
 =cut
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 =head1 SYNOPSIS
 
@@ -85,7 +85,7 @@ has [qw(
         minute
         hour
         day_of_month
-        quarter
+        quarter_of_year
         month
         year
         _gmtime_attrs
@@ -165,11 +165,11 @@ sub _build_month {
     return ++$gm_mon;
 }
 
-=head2 quarter
+=head2 quarter_of_year
 
 =cut
 
-sub _build_quarter {
+sub _build_quarter_of_year {
     my $self = shift;
 
     return int(($self->month - 0.0000001) / 3) + 1;
