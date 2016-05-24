@@ -14,16 +14,16 @@ before_install:
     - build-perl
     - perl -V
     # install prereqs
-    - "cpanm Moose"
-    - "cpanm DateTime"
-    - "cpanm POSIX"
-    - "cpanm Scalar::Util"
-    - "cpanm Tie::Hash::LRU"
-    - "cpanm Time::Local"
-    - "cpanm Try::Tiny"
-    - "cpanm Test::Perl::Critic"
-    - "cpanm Time::Duration::Concise::Localize"
-    - "cpanm Devel::Cover::Report::Coveralls"
+    - "cpanm -n Moose"
+    - "cpanm -n DateTime"
+    - "cpanm -n POSIX"
+    - "cpanm -n Scalar::Util"
+    - "cpanm -n Tie::Hash::LRU"
+    - "cpanm -n Time::Local"
+    - "cpanm -n Try::Tiny"
+    - "cpanm -n Test::Perl::Critic"
+    - "cpanm -n Time::Duration::Concise::Localize"
+    - "cpanm -n Devel::Cover::Report::Coveralls"
 script:
     perl Makefile.PL && make test && cover -test -report coveralls
 
