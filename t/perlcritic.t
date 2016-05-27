@@ -10,5 +10,3 @@ plan skip_all => "These tests are for authors only!" unless $ENV{AUTHOR_TESTING}
 
 Test::Perl::Critic->import(-profile => 't/rc/.perlcriticrc');
 Test::Perl::Critic::all_critic_ok();
-
-done_testing();
