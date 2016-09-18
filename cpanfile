@@ -1,19 +1,40 @@
-requires 'Moose', 0;
-requires 'DateTime', 0;
-requires 'Carp', 0;
-requires 'POSIX', 0;
-requires 'Scalar::Util', 0;
-requires 'Tie::Hash::LRU', 0;
-requires 'Time::Local', 0;
-requires 'Time::Piece', 0;
-requires 'Try::Tiny', 0;
-requires 'Time::Duration::Concise::Localize', '>= 2.5';
+requires 'Carp';
+requires 'DateTime';
+requires 'Moose';
+requires 'POSIX';
+requires 'Scalar::Util';
+requires 'Tie::Hash::LRU';
+requires 'Time::Duration::Concise::Localize', '2.5';
+requires 'Time::Local';
+requires 'Time::Piece';
+requires 'Try::Tiny';
 
-on 'test' => sub {
-    'Test::More'       => 0,
-    'Test::NoWarnings' => 0,
-    'Test::Exception'  => 0,
-    'Test::MockTime'   => 0,
-    'Test::Most'       => 0,
-    'Test::Perl::Critic' => 0,
+on configure => sub {
+    requires 'ExtUtils::MakeMaker', '6.48';
+};
+
+on build => sub {
+    requires 'perl', '5.012000';
+};
+
+on test => sub {
+    requires 'ExtUtils::MakeMaker';
+    requires 'File::Spec';
+    requires 'IO::Handle';
+    requires 'IPC::Open3';
+    requires 'Test::CheckDeps', '0.010';
+    requires 'Test::More', '0.94';
+    recommends 'CPAN::Meta', '2.120900';
+};
+
+on develop => sub {
+    requires 'Pod::Coverage::TrustPod';
+    requires 'Test::EOL';
+    requires 'Test::Mojibake';
+    requires 'Test::More', '0.88';
+    requires 'Test::Pod', '1.41';
+    requires 'Test::Pod::Coverage', '1.08';
+    requires 'Test::Pod::LinkCheck';
+    requires 'Test::Synopsis';
+    requires 'Test::Version', '1';
 };
