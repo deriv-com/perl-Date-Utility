@@ -16,8 +16,8 @@ before_install:
    - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
 install:
    - cpanm --quiet --notest --skip-satisfied Dist::Zilla App::cpm
-   - cpm install -g $(dzil authordeps --missing | grep -vP '[^\\w:]')
-   - cpm install -v -g $(dzil listdeps --author --missing | grep -vP '[^\\w:]')
+   - cpm install -g $(dzil authordeps --missing)
+   - cpm install -v -g $(dzil listdeps --author --missing)
 
 script:
    - dzil smoke --release --author
