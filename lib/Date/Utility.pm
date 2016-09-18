@@ -1003,7 +1003,7 @@ __END__
 
 =head1 DEPENDENCIES
 
-=over 7
+=over 4
 
 =item L<Moose>
 
@@ -1018,6 +1018,8 @@ __END__
 =item L<Time::Local>
 
 =item L<Try::Tiny>
+
+=back
 
 
 =head1 AUTHOR
