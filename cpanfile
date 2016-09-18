@@ -14,7 +14,7 @@ on configure => sub {
 };
 
 on build => sub {
-    requires 'perl', '5.012000';
+    requires 'perl', '5.010000';
 };
 
 on test => sub {
