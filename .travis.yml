@@ -1,29 +1,25 @@
 sudo: false
 language: perl
 perl:
-    - "5.24"
-    - "5.22"
-    - "5.20"
-    - "5.18"
-    - "5.16"
-    - "5.14"
-    - "5.12"
+   - 'blead'
+   - '5.20'
+   - '5.18'
+   - '5.16'
+   - '5.14'
+   - '5.12'
+   - '5.10'
+   - '5.8'
+matrix:
+   allow_failures:
+      - perl: 'blead'
+      - perl: '5.8'
+   fast_finish: true
 before_install:
-    - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
-    - source ~/travis-perl-helpers/init
-    - build-perl
-    - perl -V
-    # install prereqs
-    - "cpanm -n Moose"
-    - "cpanm -n DateTime"
-    - "cpanm -n POSIX"
-    - "cpanm -n Scalar::Util"
-    - "cpanm -n Tie::Hash::LRU"
-    - "cpanm -n Time::Local"
-    - "cpanm -n Try::Tiny"
-    - "cpanm -n Test::Perl::Critic"
-    - "cpanm -n Time::Duration::Concise::Localize"
-    - "cpanm -n Devel::Cover::Report::Coveralls"
+   - git config --global user.name "TravisCI"
+   - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
+install:
+   - cpanm --quiet --notest --skip-satisfied Dist::Zilla
+   - "dzil authordeps          --missing | grep -vP '[^\\w:]' | xargs -n 5 -P 10 cpanm --quiet --notest"
+   - "dzil listdeps   --author --missing | grep -vP '[^\\w:]' | cpanm --verbose"
 script:
-    perl Makefile.PL && make test && cover -test -report coveralls
-
+   - dzil smoke --release --author
