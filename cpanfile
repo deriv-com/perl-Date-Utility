@@ -24,6 +24,9 @@ on test => sub {
     requires 'IPC::Open3';
     requires 'Test::CheckDeps', '0.010';
     requires 'Test::More', '0.94';
+    requires 'Test::MockTime', '>= 0.15';
+    requires 'Test::NoWarnings', 0;
+    requires 'Test::Exception', 0;
     recommends 'CPAN::Meta', '2.120900';
 };
 
@@ -36,5 +39,6 @@ on develop => sub {
     requires 'Test::Pod::Coverage', '1.08';
     requires 'Test::Pod::LinkCheck';
     requires 'Test::Synopsis';
+    requires 'Test::Perl::Critic';
     requires 'Test::Version', '1';
 };
