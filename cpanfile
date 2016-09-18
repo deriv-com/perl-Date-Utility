@@ -31,6 +31,7 @@ on test => sub {
 };
 
 on develop => sub {
+    requires 'Devel::Cover::Report::Coveralls';
     requires 'Pod::Coverage::TrustPod';
     requires 'Test::EOL';
     requires 'Test::Mojibake';

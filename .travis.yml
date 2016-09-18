@@ -20,4 +20,4 @@ install:
    - cpm install -v -g $(dzil listdeps --author --missing)
 
 script:
-   - dzil smoke --release --author
+   - dzil smoke --release --author && dzil cover -test -report coveralls
