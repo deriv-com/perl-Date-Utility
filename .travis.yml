@@ -1,29 +1,23 @@
 sudo: false
 language: perl
 perl:
-    - "5.24"
-    - "5.22"
-    - "5.20"
-    - "5.18"
-    - "5.16"
-    - "5.14"
-    - "5.12"
+   - '5.24'
+   - '5.22'
+   - '5.20'
+   - '5.18'
+   - '5.16'
+   - '5.14'
+   - '5.12'
+   - '5.10'
+matrix:
+   fast_finish: true
 before_install:
-    - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
-    - source ~/travis-perl-helpers/init
-    - build-perl
-    - perl -V
-    # install prereqs
-    - "cpanm -n Moose"
-    - "cpanm -n DateTime"
-    - "cpanm -n POSIX"
-    - "cpanm -n Scalar::Util"
-    - "cpanm -n Tie::Hash::LRU"
-    - "cpanm -n Time::Local"
-    - "cpanm -n Try::Tiny"
-    - "cpanm -n Test::Perl::Critic"
-    - "cpanm -n Time::Duration::Concise::Localize"
-    - "cpanm -n Devel::Cover::Report::Coveralls"
-script:
-    perl Makefile.PL && make test && cover -test -report coveralls
+   - git config --global user.name "TravisCI"
+   - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
+install:
+   - cpanm --quiet --notest --skip-satisfied Dist::Zilla Dist::Zilla::App::Command::cover App::cpm
+   - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -g $(dzil authordeps --missing)
+   - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -v -g $(dzil listdeps --author --missing)
 
+script:
+   - dzil smoke --release --author && dzil cover -test -report coveralls
