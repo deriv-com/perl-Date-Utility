@@ -1,5 +1,6 @@
 # Date::Utility
-[![Build Status](https://travis-ci.org/binary-com/perl-Date-Utility.svg?branch=master)](https://travis-ci.org/binary-com/perl-Date-Utility) [![Coverage Status](https://coveralls.io/repos/binary-com/perl-Date-Utility/badge.png?branch=master)](https://coveralls.io/r/binary-com/perl-Date-Utility?branch=master)
+[![Build Status](https://travis-ci.org/binary-com/perl-Date-Utility.svg?branch=master)](https://travis-ci.org/binary-com/perl-Date-Utility) 
+[![codecov](https://codecov.io/gh/binary-com/perl-Date-Utility/branch/master/graph/badge.svg)](https://codecov.io/gh/binary-com/perl-Date-Utility)
 
 A class that represents a datetime in various format
 
