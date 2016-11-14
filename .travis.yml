@@ -20,6 +20,8 @@ install:
    - cpanm --quiet --notest --skip-satisfied Dist::Zilla Dist::Zilla::App::Command::cover App::cpm
    - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -g $(dzil authordeps --missing)
    - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -v -g $(dzil listdeps --author --missing)
+   - cpanm -qn Test::Requires::Git
+   - cpanm -qn Devel::Cover::Report::Codecov
 
 script:
-   - dzil smoke --release --author && dzil cover -test -report coveralls
+   - dzil smoke --release --author && dzil cover -test -report codecov
