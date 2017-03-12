@@ -66,6 +66,7 @@ has [qw(
         date
         datetime
         date_ddmmyy
+        date_ddmmyyyy
         date_ddmmmyy
         date_yyyymmdd
         date_ddmmmyyyy
@@ -659,6 +660,18 @@ sub _build_date_ddmmyy {
     my $self = shift;
 
     return join('-', (sprintf('%02d', $self->day_of_month), sprintf('%02d', $self->month), sprintf('%02d', $self->year_in_two_digit)));
+}
+
+=head2 date_ddmmyyyy
+
+Returns date in this format "dd-mm-yyyy" (28-02-2010)
+
+=cut
+
+sub _build_date_ddmmyyyy {
+    my $self = shift;
+
+    return join('-', (sprintf('%02d', $self->day_of_month), sprintf('%02d', $self->month), $self->year));
 }
 
 =head2 date_yyyymmdd
