@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1873;
+use Test::More tests => 1921;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -16,6 +16,7 @@ my %results = (
         datetime_yyyymmdd_hhmmss_TZ => '2010-07-06 02:14:46GMT',
         date                        => '2010-07-06',
         date_ddmmyy                 => '06-07-10',
+        date_ddmmyyyy               => '06-07-2010',
         date_ddmmmyyyy              => '6-Jul-2010',
         date_yyyymmdd               => '2010-07-06',
         day_as_string               => 'Tue',
@@ -56,6 +57,7 @@ my %results = (
         datetime_yyyymmdd_hhmmss_TZ => '1999-01-02 23:59:00GMT',
         date                        => '1999-01-02',
         date_ddmmyy                 => '02-01-99',
+        date_ddmmyyyy               => '02-01-1999',
         date_ddmmmyyyy              => '2-Jan-1999',
         date_yyyymmdd               => '1999-01-02',
         day_as_string               => 'Sat',
@@ -96,6 +98,7 @@ my %results = (
         datetime_yyyymmdd_hhmmss_TZ => '2011-07-17 12:34:56GMT',
         date                        => '2011-07-17',
         date_ddmmyy                 => '17-07-11',
+        date_ddmmyyyy               => '17-07-2011',
         date_ddmmmyyyy              => '17-Jul-2011',
         date_yyyymmdd               => '2011-07-17',
         day_as_string               => 'Sun',
@@ -277,14 +280,14 @@ sub comparisons {
 
     isa_ok($date_obj, 'Date::Utility', 'Object creation for ' . $which);
     foreach my $attr (
-        qw(epoch datetime datetime_ddmmmyy_hhmmss_TZ datetime_yyyymmdd_hhmmss datetime_iso8601 datetime_yyyymmdd_hhmmss_TZ date date_ddmmyy date_ddmmmyyyy date_yyyymmdd day_as_string db_timestamp full_day_name is_a_weekday is_a_weekend iso8601 month_as_string http_expires_format time time_hhmm time_hhmmss time_cutoff timezone quarter_of_year second minute hour day_of_month month year year_in_two_digit day_of_week day_of_year days_since_epoch seconds_after_midnight days_in_month is_dst_in_zone timezone_offset)
+        qw(epoch datetime datetime_ddmmmyy_hhmmss_TZ datetime_yyyymmdd_hhmmss datetime_iso8601 datetime_yyyymmdd_hhmmss_TZ date date_ddmmyy date_ddmmyyyy date_ddmmmyyyy date_yyyymmdd day_as_string db_timestamp full_day_name is_a_weekday is_a_weekend iso8601 month_as_string http_expires_format time time_hhmm time_hhmmss time_cutoff timezone quarter_of_year second minute hour day_of_month month year year_in_two_digit day_of_week day_of_year days_since_epoch seconds_after_midnight days_in_month is_dst_in_zone timezone_offset)
         )
     {
         if ($attr eq 'timezone_offset') {
             is($date_obj->$attr('America/New_York')->as_concise_string, $results{$which}->{$attr}, ' ' . $attr . ' matches.');
-        }elsif ($attr eq 'is_dst_in_zone'){
-             is($date_obj->$attr('America/New_York'), $results{$which}->{$attr}, ' ' . $attr . ' matches.');
-        }else {
+        } elsif ($attr eq 'is_dst_in_zone') {
+            is($date_obj->$attr('America/New_York'), $results{$which}->{$attr}, ' ' . $attr . ' matches.');
+        } else {
             is($date_obj->$attr, $results{$which}->{$attr}, ' ' . $attr . ' matches.');
         }
 
