@@ -8,10 +8,6 @@ use warnings;
 
 Date::Utility - A class that represents a datetime in various format
 
-=head1 VERSION
-
-Version 1.06
-
 =cut
 
 our $VERSION = '1.06';
