@@ -453,7 +453,6 @@ my $date_only         = qr/^([0-3]?[0-9])-($mon_re)-([0-9]{2}|[0-9]{4})$/;
 my $date_with_time    = qr /^([0-3]?[0-9])-($mon_re)-([0-9]{2}) ([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:GMT)?$/;
 my $numeric_date_only = qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])$/;
 my $fully_specced     = qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])(?:T|\s)?([0-2]?[0-9]):?([0-5]?[0-9]):?([0-5]?[0-9])(\.[0-9]+)?(?:Z)?$/;
-my $numeric_date_only_dd_mm_yyyy = qr/^([0-3]?[0-9])-([01]?[0-9])-([12][0-9]{3})$/;
 
 sub _parse_datetime_param {
     my $datetime = shift;
@@ -485,10 +484,6 @@ sub _parse_datetime_param {
         $day   = $3;
         $month = $2;
         $year  = $1;
-    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {
-        $day   = $1;
-        $month = $2;
-        $year  = $3;
     } elsif ($datetime =~ $fully_specced) {
         $day    = $3;
         $month  = $2;
