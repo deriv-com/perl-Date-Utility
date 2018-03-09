@@ -405,7 +405,7 @@ sub new {
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    } elsif (ref $params_ref eq 'Date::Utility') {
+    } elsif (blessed $params_ref && $params_ref->isa('Date::Utility')) {
         return $params_ref;
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
