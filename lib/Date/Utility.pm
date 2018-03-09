@@ -407,6 +407,8 @@ sub new {
         $new_params->{epoch} = time;
     } elsif (blessed $params_ref && $params_ref->isa('Date::Utility')) {
         return $params_ref;
+    } elsif (blessed $params_ref && $params_ref->isa('DateTime')) {
+        return $self->new($params_ref->epoch);
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
             confess 'Must pass either datetime or epoch to the Date object constructor';
