@@ -20,16 +20,13 @@ use Date::Utility;
 subtest 'testing Test::MockTime' => sub {
     my $past = Date::Utility->new('2011-02-28T18:30:15Z');
     my $now  = Date::Utility->new;
-    ok( $now->days_between($past) > 0,
-        "First sanity check, past is in the past :)" );
+    ok($now->days_between($past) > 0, "First sanity check, past is in the past :)");
 
     Test::MockTime::set_absolute_time('2009-04-27T17:00:00Z');
     my $mocked_time = Date::Utility->new;
-    is( $mocked_time->datetime_iso8601,
-        '2009-04-27T17:00:00Z', "moving time to the past" );
+    is($mocked_time->datetime_iso8601, '2009-04-27T17:00:00Z', "moving time to the past");
 
     Test::MockTime::set_absolute_time('2015-04-27T17:00:00Z');
-    is( Date::Utility->new->datetime_iso8601,
-        '2015-04-27T17:00:00Z', "moving time to the future" );
+    is(Date::Utility->new->datetime_iso8601, '2015-04-27T17:00:00Z', "moving time to the future");
 };
 

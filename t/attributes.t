@@ -132,8 +132,7 @@ my %results = (
     },
 );
 
-my @testcases = (
-    {
+my @testcases = ({
         epoch      => 1278382486,
         results_in => 'huey',
     },
@@ -234,15 +233,14 @@ my @testcases = (
 my $date_obj;
 
 foreach my $case (@testcases) {
-    if ( $case->{'datetime'} ) {
-        $date_obj = Date::Utility->new( { datetime => $case->{'datetime'} } );
-    }
-    else {
-        $date_obj = Date::Utility->new( { epoch => $case->{'epoch'} } );
+    if ($case->{'datetime'}) {
+        $date_obj = Date::Utility->new({datetime => $case->{'datetime'}});
+    } else {
+        $date_obj = Date::Utility->new({epoch => $case->{'epoch'}});
     }
     my $which = $case->{'results_in'};
 
-    comparisons( $date_obj, $which );
+    comparisons($date_obj, $which);
 }
 
 my $newstyle_testcases = {
@@ -268,47 +266,29 @@ my $newstyle_testcases = {
         '2-Jan-99 23:59',
         '2-Jan-99 23h59:00'
     ],
-    louie => [
-        1310906096,            '2011-07-17T12:34:56Z',
-        '2011-07-17T12:34:56', '17-Jul-11 12:34:56',
-        20110717123456,        '17-Jul-11 12:34:56GMT'
-    ],
+    louie => [1310906096, '2011-07-17T12:34:56Z', '2011-07-17T12:34:56', '17-Jul-11 12:34:56', 20110717123456, '17-Jul-11 12:34:56GMT'],
 };
 
-foreach my $which ( keys %{$newstyle_testcases} ) {
-    foreach my $time ( @{ $newstyle_testcases->{$which} } ) {
-        comparisons( Date::Utility->new($time), $which );
+foreach my $which (keys %{$newstyle_testcases}) {
+    foreach my $time (@{$newstyle_testcases->{$which}}) {
+        comparisons(Date::Utility->new($time), $which);
     }
 }
 
 sub comparisons {
-    my ( $date_obj, $which ) = @_;
+    my ($date_obj, $which) = @_;
 
-    isa_ok( $date_obj, 'Date::Utility', 'Object creation for ' . $which );
+    isa_ok($date_obj, 'Date::Utility', 'Object creation for ' . $which);
     foreach my $attr (
         qw(epoch datetime datetime_ddmmmyy_hhmmss_TZ datetime_yyyymmdd_hhmmss datetime_iso8601 datetime_yyyymmdd_hhmmss_TZ date date_ddmmyy date_ddmmyyyy date_ddmmmyyyy date_yyyymmdd day_as_string db_timestamp full_day_name is_a_weekday is_a_weekend iso8601 month_as_string http_expires_format time time_hhmm time_hhmmss time_cutoff timezone quarter_of_year second minute hour day_of_month month year year_in_two_digit day_of_week day_of_year days_since_epoch seconds_after_midnight days_in_month is_dst_in_zone timezone_offset)
-      )
+        )
     {
-        if ( $attr eq 'timezone_offset' ) {
-            is(
-                $date_obj->$attr('America/New_York')->as_concise_string,
-                $results{$which}->{$attr},
-                ' ' . $attr . ' matches.'
-            );
-        }
-        elsif ( $attr eq 'is_dst_in_zone' ) {
-            is(
-                $date_obj->$attr('America/New_York'),
-                $results{$which}->{$attr},
-                ' ' . $attr . ' matches.'
-            );
-        }
-        else {
-            is(
-                $date_obj->$attr,
-                $results{$which}->{$attr},
-                ' ' . $attr . ' matches.'
-            );
+        if ($attr eq 'timezone_offset') {
+            is($date_obj->$attr('America/New_York')->as_concise_string, $results{$which}->{$attr}, ' ' . $attr . ' matches.');
+        } elsif ($attr eq 'is_dst_in_zone') {
+            is($date_obj->$attr('America/New_York'), $results{$which}->{$attr}, ' ' . $attr . ' matches.');
+        } else {
+            is($date_obj->$attr, $results{$which}->{$attr}, ' ' . $attr . ' matches.');
         }
 
     }
