@@ -27,7 +27,6 @@ our $VERSION = '1.07';
     Date::Utility->new('YYYYMMDDHHMMSS');
     Date::Utility->new('YYYY-MM-DD HH:MM:SS');
     Date::Utility->new('YYYY-MM-DDTHH:MM:SSZ');
-    Date::Utility->new(DateTime->new({year => 1987}));
 
 =head1 DESCRIPTION
 
@@ -406,10 +405,8 @@ sub new {
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    } elsif (blessed $params_ref && $params_ref->isa('Date::Utility')) {
+    } elsif (ref $params_ref eq 'Date::Utility') {
         return $params_ref;
-    } elsif (blessed $params_ref && $params_ref->isa('DateTime')) {
-        return $self->new($params_ref->epoch);
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
             confess 'Must pass either datetime or epoch to the Date object constructor';
@@ -810,11 +807,9 @@ sub is_dst_in_zone {
 
 =head2 plus_time_interval
 
-Returns a new Date::Utility plus the supplied Time::Duration::Concise::Localize or DateTime::Duration.  Negative TimeIntervals will move backward.
+Returns a new Date::Utility plus the supplied Time::Duration::Concise::Localize.  Negative TimeIntervals will move backward.
 
 Will also attempt to create a TimeInterval from a supplied code, if possible.
-
-if the argument is a hashref or DateTime::Duration  object, then we treat it as a DateTime::Duration argument.
 
 =cut
 
@@ -826,11 +821,9 @@ sub plus_time_interval {
 
 =head2 minus_time_interval
 
-Returns a new Date::Utility  minus the supplied Time::Duration::Concise::Localize or DateTime::Duration.  Negative TimeIntervals will move forward.
+Returns a new Date::Utility  minus the supplied Time::Duration::Concise::Localize.  Negative TimeIntervals will move forward.
 
 Will also attempt to create a TimeInterval from a supplied code, if possible.
-
-if the argument is a hashref or DateTime::Duration  object, then we treat it as a DateTime::Duration argument.
 
 =cut
 
@@ -842,12 +835,6 @@ sub minus_time_interval {
 
 sub _move_time_interval {
     my ($self, $ti, $dir) = @_;
-
-    if (blessed($ti) && $ti->isa('DateTime::Duration') || ref($ti) && ref($ti) eq 'HASH') {
-        my $dt = $self->to_DateTime;
-        my $method = $dir > 0 ? 'add' : 'subtract';
-        return blessed($self)->new($dt->$method($ti));
-    }
 
     unless (ref($ti)) {
         try { $ti = Time::Duration::Concise::Localize->new(interval => $ti) }
@@ -1026,17 +1013,6 @@ sub today {
         $today_ends_at   = $time + 86399;
     }
     return $today_obj;
-}
-
-=head2 to_DateTime
-
-Returns a DateTime.
-
-=cut
-
-sub to_DateTime {
-    my $self = shift;
-    return DateTime->from_epoch(epoch => $self->epoch);
 }
 
 no Moose;

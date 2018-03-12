@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 11;
+use Test::More tests => 10;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -90,8 +90,6 @@ subtest 'plus_time_interval' => sub {
     is($datetime2->plus_time_interval('1d')->is_same_as($datetime3),  1,          'plus_time_interval("1d") yields one day ahead.');
     is($datetime1->plus_time_interval(0),                             $datetime1, 'plus_time_interval(0) yields the same object');
     is($datetime3->plus_time_interval('-1d')->is_same_as($datetime2), 1,          'plus_time_interval("-1d") yields one day back.');
-    ok($datetime3->plus_time_interval({months => 1})->is_same_as($datetime3->plus_time_interval('31d')),
-        'plus_time_interval({months => 1}) yields one month ahead');
 };
 
 subtest 'minus_time_interval' => sub {
@@ -99,8 +97,6 @@ subtest 'minus_time_interval' => sub {
     is($datetime1->minus_time_interval(0),                             $datetime1, 'minus_time_interval(0) yields the same object');
     is($datetime2->minus_time_interval('-1d')->is_same_as($datetime3), 1,          'minus_time_interval("-1d") yields one day ahead.');
     throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
-    ok($datetime3->minus_time_interval({months => 1})->is_same_as($datetime3->minus_time_interval('30d')),
-        'minus_time_interval({months => 1}) yields one month back');
 };
 
 subtest 'move_to_nth_dow' => sub {
@@ -138,11 +134,6 @@ subtest 'move_to_nth_dow' => sub {
             $d = $d->plus_time_interval('1d');
         }
     };
-};
-
-subtest to_DateTime => sub {
-    isa_ok($datetime1->to_DateTime, 'DateTime', 'to DateTime');
-    ok($datetime1->is_same_as(Date::Utility->new($datetime1->to_DateTime)), 'DateTime value ok');
 };
 
 1;

@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 
-use DateTime;
 use Test::More;
 use Test::Exception;
 require Test::NoWarnings;
@@ -181,14 +180,6 @@ new_ok(
     'Date::Utility' => [Date::Utility->new('2014-11-11')],
     'new style Date::Utility object'
 );
-
-my $dt_obj = DateTime->new(year => '1999');
-my $obj = new_ok(
-    'Date::Utility' => [$dt_obj],
-    'new style DateTime object'
-);
-
-is($obj->epoch, $dt_obj->epoch, 'obj correct');
 
 subtest 'leap years' => sub {
     throws_ok { Date::Utility->new('2001-02-29') } qr/Day '29' out of range/, 'No leap day in 2001';
