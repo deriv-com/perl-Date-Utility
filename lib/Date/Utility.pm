@@ -27,6 +27,7 @@ our $VERSION = '1.07';
     Date::Utility->new('YYYYMMDDHHMMSS');
     Date::Utility->new('YYYY-MM-DD HH:MM:SS');
     Date::Utility->new('YYYY-MM-DDTHH:MM:SSZ');
+    Date::Utility->new(DateTime->new({year => 1987}));
 
 =head1 DESCRIPTION
 
@@ -809,9 +810,11 @@ sub is_dst_in_zone {
 
 =head2 plus_time_interval
 
-Returns a new Date::Utility plus the supplied Time::Duration::Concise::Localize.  Negative TimeIntervals will move backward.
+Returns a new Date::Utility plus the supplied Time::Duration::Concise::Localize or DateTime::Duration.  Negative TimeIntervals will move backward.
 
 Will also attempt to create a TimeInterval from a supplied code, if possible.
+
+if the argument is a hashref or DateTime::Duration  object, then we treat it as a DateTime::Duration argument.
 
 =cut
 
@@ -823,9 +826,11 @@ sub plus_time_interval {
 
 =head2 minus_time_interval
 
-Returns a new Date::Utility  minus the supplied Time::Duration::Concise::Localize.  Negative TimeIntervals will move forward.
+Returns a new Date::Utility  minus the supplied Time::Duration::Concise::Localize or DateTime::Duration.  Negative TimeIntervals will move forward.
 
 Will also attempt to create a TimeInterval from a supplied code, if possible.
+
+if the argument is a hashref or DateTime::Duration  object, then we treat it as a DateTime::Duration argument.
 
 =cut
 
@@ -1022,6 +1027,12 @@ sub today {
     }
     return $today_obj;
 }
+
+=head2 to_DateTime
+
+Returns a DateTime.
+
+=cut
 
 sub to_DateTime {
     my $self = shift;
