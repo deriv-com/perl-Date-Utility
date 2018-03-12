@@ -838,6 +838,12 @@ sub minus_time_interval {
 sub _move_time_interval {
     my ($self, $ti, $dir) = @_;
 
+    if (blessed($ti) && $ti->isa('DateTime::Duration') || ref($ti) && ref($ti) eq 'HASH') {
+        my $dt = $self->to_DateTime;
+        my $method = $dir > 0 ? 'add' : 'subtract';
+        return blessed($self)->new($dt->$method($ti));
+    }
+
     unless (ref($ti)) {
         try { $ti = Time::Duration::Concise::Localize->new(interval => $ti) }
         catch {
@@ -1015,6 +1021,11 @@ sub today {
         $today_ends_at   = $time + 86399;
     }
     return $today_obj;
+}
+
+sub to_DateTime {
+    my $self = shift;
+    return DateTime->from_epoch(epoch => $self->epoch);
 }
 
 no Moose;
