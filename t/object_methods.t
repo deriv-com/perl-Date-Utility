@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -97,6 +97,17 @@ subtest 'minus_time_interval' => sub {
     is($datetime1->minus_time_interval(0),                             $datetime1, 'minus_time_interval(0) yields the same object');
     is($datetime2->minus_time_interval('-1d')->is_same_as($datetime3), 1,          'minus_time_interval("-1d") yields one day ahead.');
     throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
+};
+
+subtest 'plus_months' => sub {
+  my @test_cases = (['2000-01-01', 1, '2000-02-01'],['2000-01-01',2,'2000-03-01'],['2000-01-01',12,'2001-01-01'],
+                    ['2000-01-29',1,'2000-02-29'], ['2000-01-30',1,'2000-02-29'], ['2000-01-31',1,'2000-02-29'],
+                    ['2000-01-31',3,'2000-04-30'], 
+                   );
+    for my $t (@test_cases){
+      is(Date::Utility->new($t->[0])->plus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] months should be $t->[2]");
+      explain('-' x 80);
+    }
 };
 
 subtest 'move_to_nth_dow' => sub {

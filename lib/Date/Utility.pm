@@ -3,6 +3,7 @@ package Date::Utility;
 use 5.006;
 use strict;
 use warnings;
+use feature qw(state);
 
 =head1 NAME
 
@@ -1013,6 +1014,25 @@ sub today {
         $today_ends_at   = $time + 86399;
     }
     return $today_obj;
+}
+
+sub plus_months {
+    my ($self, $months) = @_;
+    my $new_year  = $self->year;
+    my $new_month = $self->month + $months;
+    if ($new_month < 1 || $new_month > 12) {
+        $new_year += int($new_month / 12);
+        $new_month = $new_month % 12;
+        if ($new_month < 1) {
+            $new_year--;
+            $new_month += 12;
+        }
+    }
+    my $max_day = __PACKAGE__->new(sprintf ("%04d-%02d-01", $new_year, $new_month))->days_in_month;
+    my $new_day = $self->day_of_month;
+    $new_day = $new_day < $max_day ? $new_day : $max_day;
+    my $new_date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $new_year, $new_month, $new_day, $self->hour, $self->minute, $self->second);
+    return __PACKAGE__->new($new_date_string);
 }
 
 no Moose;
