@@ -1016,6 +1016,16 @@ sub today {
     return $today_obj;
 }
 
+=head2 plus_months
+
+Returns a new Date::Utility object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
+e.g.
+
+    print Date::Utility->new('2000-01-31')->plus_months(1)->date_yyyymmdd;
+    # will got 2000-02-28
+
+=cut
+
 sub plus_months {
     my ($self, $months) = @_;
     my $new_year  = $self->year;
