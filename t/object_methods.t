@@ -99,14 +99,34 @@ subtest 'minus_time_interval' => sub {
     throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
 };
 
-subtest 'plus_months' => sub {
-  my @test_cases = (['2000-01-01', 1, '2000-02-01'],['2000-01-01',2,'2000-03-01'],['2000-01-01',12,'2001-01-01'],
-                    ['2000-01-29',1,'2000-02-29'], ['2000-01-30',1,'2000-02-29'], ['2000-01-31',1,'2000-02-29'],
-                    ['2000-01-31',3,'2000-04-30'], ['2000-05-31',13, '2001-06-30']
-                   );
-    for my $t (@test_cases){
-      is(Date::Utility->new($t->[0])->plus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] months should be $t->[2]");
-      explain('-' x 80);
+subtest 'plus_months & minus_months' => sub {
+    throws_ok { $datetime1->plus_months("12.3") } qr/Need a integer/, 'need integer';
+    throws_ok { $datetime1->plus_months("12b") } qr/Need a integer/,  'need integer';
+    my @test_cases = (
+        ['2000-01-01', 1,  '2000-02-01'],
+        ['2000-01-01', 2,  '2000-03-01'],
+        ['2000-01-01', 12, '2001-01-01'],
+        ['2000-01-29', 1,  '2000-02-29'],
+        ['2000-01-30', 1,  '2000-02-29'],
+        ['2000-01-31', 1,  '2000-02-29'],
+        ['2000-01-31', 3,  '2000-04-30'],
+        ['2000-05-31', 13, '2001-06-30'],
+    );
+    for my $t (@test_cases) {
+        is(Date::Utility->new($t->[0])->plus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] months should be $t->[2]");
+    }
+    @test_cases = (
+        ['2000-02-01', 1,  '2000-01-01'],
+        ['2000-03-01', 2,  '2000-01-01'],
+        ['2001-01-01', 12, '2000-01-01'],
+        ['2000-02-29', 1,  '2000-01-29'],
+        ['2000-3-30',  1,  '2000-02-29'],
+        ['2000-03-31', 1,  '2000-02-29'],
+        ['2000-07-31', 3,  '2000-04-30'],
+        ['2001-07-31', 13, '2000-06-30'],
+    );
+    for my $t (@test_cases) {
+        is(Date::Utility->new($t->[0])->minus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] minus $t->[1] months should be $t->[2]");
     }
 };
 

@@ -44,6 +44,7 @@ use Tie::Hash::LRU;
 use Time::Local qw(timegm);
 use Try::Tiny;
 use Time::Duration::Concise::Localize;
+use POSIX qw(floor);
 
 my %popular;
 my $lru = tie %popular, 'Tie::Hash::LRU', 300;
@@ -1028,21 +1029,37 @@ e.g.
 
 sub plus_months {
     my ($self, $months) = @_;
+    (looks_like_number($months) && $months == int($months)) || die "Need a integer months number";
     my $new_year  = $self->year;
     my $new_month = $self->month + $months;
     if ($new_month < 1 || $new_month > 12) {
-        $new_year += int($new_month / 12);
+        $new_year += floor($new_month / 12);
         $new_month = $new_month % 12;
-        if ($new_month < 1) {
+        while ($new_month < 1) {
             $new_year--;
             $new_month += 12;
         }
     }
-    my $max_day = __PACKAGE__->new(sprintf ("%04d-%02d-01", $new_year, $new_month))->days_in_month;
+    my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $new_year, $new_month))->days_in_month;
     my $new_day = $self->day_of_month;
     $new_day = $new_day < $max_day ? $new_day : $max_day;
     my $new_date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $new_year, $new_month, $new_day, $self->hour, $self->minute, $self->second);
     return __PACKAGE__->new($new_date_string);
+}
+
+=head2 plus_months
+
+Returns a new Date::Utility object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
+e.g.
+
+    print Date::Utility->new('2000-03-31')->minus_months(1)->date_yyyymmdd;
+    # will got 2000-02-28
+
+=cut
+
+sub minus_months {
+    my ($self, $months) = @_;
+    return $self->plus_months(-$months);
 }
 
 no Moose;
