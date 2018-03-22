@@ -839,13 +839,13 @@ sub _move_time_interval {
     my ($self, $ti, $dir) = @_;
 
     unless (ref($ti)) {
-        if ($ti =~ s/([+-]?\d+)y//) {
-            my $new_date = $self->_plus_years($1);
-            return $ti ? $new_date->move_time_interval($ti) : $new_date;
+        if ($ti =~ s/([\d.]+)y//) {
+            my $new_date = $self->_plus_years($dir * $1);
+            return $ti ? $new_date->_move_time_interval($ti, $dir) : $new_date;
         }
-        if ($ti =~ s/([+-]?\d+)mo//i) {
-            my $new_date = $self->_plus_months($1);
-            return $ti ? $new_date->move_time_interval($ti) : $new_date;
+        if ($ti =~ s/([\d.]+)mo//i) {
+            my $new_date = $self->_plus_months($dir * $1);
+            return $ti ? $new_date->_move_time_interval($ti, $dir) : $new_date;
         }
         try { $ti = Time::Duration::Concise::Localize->new(interval => $ti) }
         catch {
