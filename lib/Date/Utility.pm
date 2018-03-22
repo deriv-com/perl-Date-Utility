@@ -1017,6 +1017,37 @@ sub today {
     return $today_obj;
 }
 
+=head2 plus_years
+
+Returns a new Date::Utility object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
+e.g.
+
+    print Date::Utility->new('2000-02-29')->plus_years(1)->date_yyyymmdd;
+    # will got 2001-02-28
+
+=cut
+
+sub plus_years {
+    my ($self, $years) = @_;
+    (looks_like_number($years) && $years == int($years)) || die "Need a integer years number";
+    return _create_trimmed_date($self, $self->year + $years, $self->month, $self->day_of_month);
+}
+
+=head2 plus_years
+
+Returns a new Date::Utility object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
+e.g.
+
+    print Date::Utility->new('2000-02-29')->minus_years(1)->date_yyyymmdd;
+    # will got 1999-02-28
+
+=cut
+
+sub minus_years {
+    my ($self, $years) = @_;
+    return $self->plus_years(-$years);
+}
+
 =head2 plus_months
 
 Returns a new Date::Utility object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
@@ -1040,14 +1071,11 @@ sub plus_months {
             $new_month += 12;
         }
     }
-    my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $new_year, $new_month))->days_in_month;
     my $new_day = $self->day_of_month;
-    $new_day = $new_day < $max_day ? $new_day : $max_day;
-    my $new_date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $new_year, $new_month, $new_day, $self->hour, $self->minute, $self->second);
-    return __PACKAGE__->new($new_date_string);
+    return _create_trimmed_date($self, $new_year, $new_month, $new_day);
 }
 
-=head2 plus_months
+=head2 minus_months
 
 Returns a new Date::Utility object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1060,6 +1088,20 @@ e.g.
 sub minus_months {
     my ($self, $months) = @_;
     return $self->plus_months(-$months);
+}
+
+=head2 _create_trimmed_date
+
+Return a valid Date::Utililty object given the year, month and day. If the day is greater than the max day in that month , then use that max day as the day in the new object.
+
+=cut
+
+sub _create_trimmed_date {
+    my ($datetime, $year, $month, $day) = @_;
+    my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $year, $month))->days_in_month;
+    $day = $day < $max_day ? $day : $max_day;
+    my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $datetime->hour, $datetime->minute, $datetime->second);
+    return __PACKAGE__->new($date_string);
 }
 
 no Moose;
