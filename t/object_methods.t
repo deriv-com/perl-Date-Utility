@@ -100,8 +100,8 @@ subtest 'minus_time_interval' => sub {
 };
 
 subtest 'plus_months & minus_months' => sub {
-    throws_ok { $datetime1->plus_months("12.3") } qr/Need a integer/, 'need integer';
-    throws_ok { $datetime1->plus_months("12b") } qr/Need a integer/,  'need integer';
+    throws_ok { $datetime1->_plus_months("12.3") } qr/Need a integer/, 'need integer';
+    throws_ok { $datetime1->_plus_months("12b") } qr/Need a integer/,  'need integer';
     my @test_cases = (
         ['2000-01-01', 1,  '2000-02-01'],
         ['2000-01-01', 2,  '2000-03-01'],
@@ -113,7 +113,7 @@ subtest 'plus_months & minus_months' => sub {
         ['2000-05-31', 13, '2001-06-30'],
     );
     for my $t (@test_cases) {
-        is(Date::Utility->new($t->[0])->plus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] months should be $t->[2]");
+        is(Date::Utility->new($t->[0])->_plus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] months should be $t->[2]");
     }
     @test_cases = (
         ['2000-02-01', 1,  '2000-01-01'],
@@ -126,7 +126,7 @@ subtest 'plus_months & minus_months' => sub {
         ['2001-07-31', 13, '2000-06-30'],
     );
     for my $t (@test_cases) {
-        is(Date::Utility->new($t->[0])->minus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] minus $t->[1] months should be $t->[2]");
+        is(Date::Utility->new($t->[0])->_minus_months($t->[1])->date_yyyymmdd, $t->[2], "date $t->[0] minus $t->[1] months should be $t->[2]");
     }
 };
 

@@ -839,6 +839,14 @@ sub _move_time_interval {
     my ($self, $ti, $dir) = @_;
 
     unless (ref($ti)) {
+        if ($ti =~ s/([+-]?\d+)y//) {
+            my $new_date = $self->_plus_years($1);
+            return $ti ? $new_date->move_time_interval($ti) : $new_date;
+        }
+        if ($ti =~ s/([+-]?\d+)mo//i) {
+            my $new_date = $self->_plus_months($1);
+            return $ti ? $new_date->move_time_interval($ti) : $new_date;
+        }
         try { $ti = Time::Duration::Concise::Localize->new(interval => $ti) }
         catch {
             $ti //= 'undef';
@@ -1017,25 +1025,25 @@ sub today {
     return $today_obj;
 }
 
-=head2 plus_years
+=head2 _plus_years
 
 Returns a new Date::Utility object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
-    print Date::Utility->new('2000-02-29')->plus_years(1)->date_yyyymmdd;
+    print Date::Utility->new('2000-02-29')->_plus_years(1)->date_yyyymmdd;
     # will got 2001-02-28
 
 =cut
 
-sub plus_years {
+sub _plus_years {
     my ($self, $years) = @_;
     (looks_like_number($years) && $years == int($years)) || die "Need a integer years number";
     return _create_trimmed_date($self, $self->year + $years, $self->month, $self->day_of_month);
 }
 
-=head2 plus_years
+=head2 _minus_years
 
-Returns a new Date::Utility object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
+Returns a new Date::Utility object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-02-29')->minus_years(1)->date_yyyymmdd;
@@ -1043,9 +1051,9 @@ e.g.
 
 =cut
 
-sub minus_years {
+sub _minus_years {
     my ($self, $years) = @_;
-    return $self->plus_years(-$years);
+    return $self->_plus_years(-$years);
 }
 
 =head2 plus_months
@@ -1058,7 +1066,7 @@ e.g.
 
 =cut
 
-sub plus_months {
+sub _plus_months {
     my ($self, $months) = @_;
     (looks_like_number($months) && $months == int($months)) || die "Need a integer months number";
     my $new_year  = $self->year;
@@ -1075,7 +1083,7 @@ sub plus_months {
     return _create_trimmed_date($self, $new_year, $new_month, $new_day);
 }
 
-=head2 minus_months
+=head2 _minus_months
 
 Returns a new Date::Utility object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1085,9 +1093,9 @@ e.g.
 
 =cut
 
-sub minus_months {
+sub _minus_months {
     my ($self, $months) = @_;
-    return $self->plus_months(-$months);
+    return $self->_plus_months(-$months);
 }
 
 =head2 _create_trimmed_date
