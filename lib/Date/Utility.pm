@@ -1112,6 +1112,17 @@ sub _create_trimmed_date {
     return __PACKAGE__->new($date_string);
 }
 
+my %TIMEZONE_OFFSET = (
+                          'Asia/Tokyo' => 9 * 3600,
+                         );
+
+sub day_of_week_in_timezone{
+  my ($self, $timezone) = @_;
+  die "Currently the timeozne $timezone is not supported yet" unless $timezone && $TIMEZONE_OFFSET{$timezone};
+  return $self->plus_time_interval($TIMEZONE_OFFSET{$timezone})->day_of_week;
+}
+
+
 no Moose;
 
 __PACKAGE__->meta->make_immutable(
