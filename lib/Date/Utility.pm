@@ -1127,6 +1127,10 @@ sub day_of_week_in_timezone{
   return $self->plus_time_interval($self->timezone_offset($timezone))->day_of_week;
 }
 
+=head2 is_a_weekend_in_timezone
+
+=cut
+
 sub is_a_weekend_in_timezone{
   my ($self, $timezone) = @_;
   return $self->plus_time_interval($self->timezone_offset($timezone))->is_a_weekend;
