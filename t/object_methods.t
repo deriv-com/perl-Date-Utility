@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -175,6 +175,22 @@ subtest 'move_to_nth_dow' => sub {
             $d = $d->plus_time_interval('1d');
         }
     };
+};
+
+subtest 'day_of_week_in_timezone' => sub {
+  my @test_cases = (['2018-03-23 04:00:00', 5],
+                    ['2018-03-23 10:00:00', 5],
+                    ['2018-03-23 16:00:00', 6],
+                    ['2018-03-23 22:00:00', 6],
+                    ['2018-03-24 04:00:00', 6],
+                    ['2018-03-24 10:00:00', 6],
+                    ['2018-03-24 16:00:00', 0],
+                    ['2018-03-24 22:00:00', 0],
+                   );
+  for my $t (@test_cases){
+    my $d = Date::Utility->new($t->[0]);
+    is($d->day_of_week_in_timezone('Asia/Tokyo'), $t->[1], "day of week in timezone tokyo is ok");
+  }
 };
 
 1;

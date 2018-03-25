@@ -177,6 +177,8 @@ sub _build_quarter_of_year {
 
 =head2 day_of_week
 
+    return day of week begin with 0
+
 =cut
 
 sub _build_day_of_week {
@@ -1115,6 +1117,14 @@ sub _create_trimmed_date {
 my %TIMEZONE_OFFSET = (
                           'Asia/Tokyo' => 9 * 3600,
                          );
+
+=head2 day_of_week_in_timezone
+
+    return day of week in that special timezone, begin with 0
+
+TODO: offset and is_weekend
+
+=cut
 
 sub day_of_week_in_timezone{
   my ($self, $timezone) = @_;
