@@ -1114,10 +1114,6 @@ sub _create_trimmed_date {
     return __PACKAGE__->new($date_string);
 }
 
-my %TIMEZONE_OFFSET = (
-                          'Asia/Tokyo' => 9 * 3600,
-                         );
-
 =head2 day_of_week_in_timezone
 
     return day of week in that special timezone, begin with 0
@@ -1128,10 +1124,13 @@ TODO: offset and is_weekend
 
 sub day_of_week_in_timezone{
   my ($self, $timezone) = @_;
-  die "Currently the timeozne $timezone is not supported yet" unless $timezone && $TIMEZONE_OFFSET{$timezone};
-  return $self->plus_time_interval($TIMEZONE_OFFSET{$timezone})->day_of_week;
+  return $self->plus_time_interval($self->timezone_offset($timezone))->day_of_week;
 }
 
+sub is_a_weekend_in_timezone{
+  my ($self, $timezone) = @_;
+  return $self->plus_time_interval($self->timezone_offset($timezone))->is_a_weekend;
+}
 
 no Moose;
 
