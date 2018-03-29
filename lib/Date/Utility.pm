@@ -1005,6 +1005,20 @@ sub truncate_to_day {
     return $popular{$tepoch} // Date::Utility->new($tepoch);
 }
 
+=head2 truncate_to_month
+
+Returns a Date::Utility object with the day and time part truncated out of it.
+
+For instance, '2011-12-13 23:24:25' will return a new Date::Utility
+object representing '2011-12-01 00:00:00'
+
+=cut
+
+sub truncate_to_month {
+    my ($self) = @_;
+    return Date::Utility->new(sprintf("%04d-%02d-01", $self->year, $self->month));
+}
+
 =head2 today
 
 Returns Date::Utility object for the start of the current day. Much faster than
@@ -1122,18 +1136,18 @@ TODO: offset and is_weekend
 
 =cut
 
-sub day_of_week_in_timezone{
-  my ($self, $timezone) = @_;
-  return $self->plus_time_interval($self->timezone_offset($timezone))->day_of_week;
+sub day_of_week_in_timezone {
+    my ($self, $timezone) = @_;
+    return $self->plus_time_interval($self->timezone_offset($timezone))->day_of_week;
 }
 
 =head2 is_a_weekend_in_timezone
 
 =cut
 
-sub is_a_weekend_in_timezone{
-  my ($self, $timezone) = @_;
-  return $self->plus_time_interval($self->timezone_offset($timezone))->is_a_weekend;
+sub is_a_weekend_in_timezone {
+    my ($self, $timezone) = @_;
+    return $self->plus_time_interval($self->timezone_offset($timezone))->is_a_weekend;
 }
 
 no Moose;
