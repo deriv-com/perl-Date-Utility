@@ -1121,10 +1121,10 @@ Return a valid Date::Utililty object whose date part is same with the given year
 =cut
 
 sub _create_trimmed_date {
-    my ($datetime, $year, $month, $day) = @_;
+    my ($self, $year, $month, $day) = @_;
     my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $year, $month))->days_in_month;
     $day = $day < $max_day ? $day : $max_day;
-    my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $datetime->hour, $datetime->minute, $datetime->second);
+    my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $self->hour, $self->minute, $self->second);
     return __PACKAGE__->new($date_string);
 }
 
