@@ -1054,7 +1054,7 @@ e.g.
 sub _plus_years {
     my ($self, $years) = @_;
     (looks_like_number($years) && $years == int($years)) || die "Need a integer years number";
-    return _create_trimmed_date($self, $self->year + $years, $self->month, $self->day_of_month);
+    return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
 }
 
 =head2 _minus_years
@@ -1096,7 +1096,7 @@ sub _plus_months {
         }
     }
     my $new_day = $self->day_of_month;
-    return _create_trimmed_date($self, $new_year, $new_month, $new_day);
+    return $self->_create_trimmed_date($new_year, $new_month, $new_day);
 }
 
 =head2 _minus_months
