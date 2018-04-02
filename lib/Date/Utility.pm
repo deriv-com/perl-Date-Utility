@@ -1116,7 +1116,7 @@ sub _minus_months {
 
 =head2 _create_trimmed_date
 
-Return a valid Date::Utililty object given the year, month and day. If the day is greater than the max day in that month , then use that max day as the day in the new object.
+Return a valid Date::Utililty object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
 
 =cut
 
