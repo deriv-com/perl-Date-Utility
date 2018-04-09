@@ -1132,8 +1132,6 @@ sub _create_trimmed_date {
 
     return day of week in that special timezone, begin with 0
 
-TODO: offset and is_weekend
-
 =cut
 
 sub day_of_week_in_timezone {
