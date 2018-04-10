@@ -177,24 +177,6 @@ subtest 'move_to_nth_dow' => sub {
     };
 };
 
-subtest 'day_of_week_in_timezone & is_a_weekend_in_timezone' => sub {
-    my @test_cases = (
-        ['2018-03-23 04:00:00', 5, 0],
-        ['2018-03-23 10:00:00', 5, 0],
-        ['2018-03-23 16:00:00', 6, 1],
-        ['2018-03-23 22:00:00', 6, 1],
-        ['2018-03-24 04:00:00', 6, 1],
-        ['2018-03-24 10:00:00', 6, 1],
-        ['2018-03-24 16:00:00', 0, 1],
-        ['2018-03-24 22:00:00', 0, 1],
-    );
-    for my $t (@test_cases) {
-        my $d = Date::Utility->new($t->[0]);
-        is($d->day_of_week_in_timezone('Asia/Tokyo'),  $t->[1], "day of week in timezone tokyo is ok");
-        is($d->is_a_weekend_in_timezone('Asia/Tokyo'), $t->[2], "weekend in timezone tokyo is ok");
-    }
-};
-
 subtest truncate_to_month => sub {
     my $d = Date::Utility->new('2001-03-02');
     is($d->truncate_to_month->datetime_yyyymmdd_hhmmss, '2001-03-01 00:00:00');
