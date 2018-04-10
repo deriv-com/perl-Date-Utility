@@ -1128,25 +1128,6 @@ sub _create_trimmed_date {
     return __PACKAGE__->new($date_string);
 }
 
-=head2 day_of_week_in_timezone
-
-    return day of week in that special timezone, begin with 0
-
-=cut
-
-sub day_of_week_in_timezone {
-    my ($self, $timezone) = @_;
-    return $self->plus_time_interval($self->timezone_offset($timezone))->day_of_week;
-}
-
-=head2 is_a_weekend_in_timezone
-
-=cut
-
-sub is_a_weekend_in_timezone {
-    my ($self, $timezone) = @_;
-    return $self->plus_time_interval($self->timezone_offset($timezone))->is_a_weekend;
-}
 
 no Moose;
 
