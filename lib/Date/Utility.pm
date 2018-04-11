@@ -1055,7 +1055,8 @@ sub _plus_years {
     my ($self, $years) = @_;
     die "Need a integer years number"
         unless looks_like_number($years)
-        and $years == int($years) return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
+        and $years == int($years);
+    return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
 }
 
 =head2 _minus_years
