@@ -133,6 +133,7 @@ subtest 'plus months & minus months' => sub {
         ['2000-03-31', 1,  '2000-02-29'],
         ['2000-07-31', 3,  '2000-04-30'],
         ['2001-07-31', 13, '2000-06-30'],
+        ['2001-01-01', 13, '1999-12-01'],
     );
     for my $t (@test_cases) {
         is(Date::Utility->new($t->[0])->minus_time_interval("$t->[1]mo")->date_yyyymmdd,

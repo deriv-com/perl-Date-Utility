@@ -1043,7 +1043,7 @@ sub today {
 
 =head2 _plus_years
 
-Returns a new Date::Utility object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
+Returns a new L<Date::Utility> object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-02-29')->_plus_years(1)->date_yyyymmdd;
@@ -1053,13 +1053,14 @@ e.g.
 
 sub _plus_years {
     my ($self, $years) = @_;
-    (looks_like_number($years) && $years == int($years)) || die "Need a integer years number";
-    return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
+    die "Need a integer years number"
+        unless looks_like_number($years)
+        and $years == int($years) return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
 }
 
 =head2 _minus_years
 
-Returns a new Date::Utility object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
+Returns a new L<Date::Utility> object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-02-29')->minus_years(1)->date_yyyymmdd;
@@ -1072,9 +1073,9 @@ sub _minus_years {
     return $self->_plus_years(-$years);
 }
 
-=head2 plus_months
+=head2 _plus_months
 
-Returns a new Date::Utility object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
+Returns a new L<Date::Utility> object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-01-31')->plus_months(1)->date_yyyymmdd;
@@ -1090,7 +1091,7 @@ sub _plus_months {
     if ($new_month < 1 || $new_month > 12) {
         $new_year += floor($new_month / 12);
         $new_month = $new_month % 12;
-        while ($new_month < 1) {
+        if ($new_month < 1) {    # when date is 2011-01-01, and $months is -13, then here $new_month will be 0, so hanndle this case here.
             $new_year--;
             $new_month += 12;
         }
@@ -1101,7 +1102,7 @@ sub _plus_months {
 
 =head2 _minus_months
 
-Returns a new Date::Utility object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
+Returns a new L<Date::Utility> object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-03-31')->minus_months(1)->date_yyyymmdd;
@@ -1116,7 +1117,7 @@ sub _minus_months {
 
 =head2 _create_trimmed_date
 
-Return a valid Date::Utililty object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
+Return a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
 
 =cut
 
@@ -1127,7 +1128,6 @@ sub _create_trimmed_date {
     my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $self->hour, $self->minute, $self->second);
     return __PACKAGE__->new($date_string);
 }
-
 
 no Moose;
 
