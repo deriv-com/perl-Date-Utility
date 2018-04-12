@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 10;
+use Test::More tests => 13;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -99,6 +99,48 @@ subtest 'minus_time_interval' => sub {
     throws_ok { $datetime3->minus_time_interval("one") } qr/Bad format/, 'minus_time_interval("one") is not a mind-reader..';
 };
 
+subtest 'plus years & minus years' => sub {
+    throws_ok { $datetime1->plus_time_interval("12.3y") } qr/Need a integer/, 'need integer';
+    my @test_cases = (['2000-01-01', 1, '2001-01-01'], ['2000-01-1', 2, '2002-01-01'], ['2000-02-29', 1, '2001-02-28']);
+    for my $t (@test_cases) {
+        is(Date::Utility->new($t->[0])->plus_time_interval("$t->[1]y")->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] years should be $t->[2]");
+    }
+
+};
+
+subtest 'plus months & minus months' => sub {
+    throws_ok { $datetime1->plus_time_interval("12.3mo") } qr/Need a integer/, 'need integer';
+    my @test_cases = (
+        ['2000-01-01', 1,  '2000-02-01'],
+        ['2000-01-01', 2,  '2000-03-01'],
+        ['2000-01-01', 12, '2001-01-01'],
+        ['2000-01-29', 1,  '2000-02-29'],
+        ['2000-01-30', 1,  '2000-02-29'],
+        ['2000-01-31', 1,  '2000-02-29'],
+        ['2000-01-31', 3,  '2000-04-30'],
+        ['2000-05-31', 13, '2001-06-30'],
+    );
+    for my $t (@test_cases) {
+        is(Date::Utility->new($t->[0])->plus_time_interval("$t->[1]mo")->date_yyyymmdd, $t->[2],
+            "date $t->[0] plus $t->[1] months should be $t->[2]");
+    }
+    @test_cases = (
+        ['2000-02-01', 1,  '2000-01-01'],
+        ['2000-03-01', 2,  '2000-01-01'],
+        ['2001-01-01', 12, '2000-01-01'],
+        ['2000-02-29', 1,  '2000-01-29'],
+        ['2000-3-30',  1,  '2000-02-29'],
+        ['2000-03-31', 1,  '2000-02-29'],
+        ['2000-07-31', 3,  '2000-04-30'],
+        ['2001-07-31', 13, '2000-06-30'],
+        ['2001-01-01', 13, '1999-12-01'],
+    );
+    for my $t (@test_cases) {
+        is(Date::Utility->new($t->[0])->minus_time_interval("$t->[1]mo")->date_yyyymmdd,
+            $t->[2], "date $t->[0] minus $t->[1] months should be $t->[2]");
+    }
+};
+
 subtest 'move_to_nth_dow' => sub {
     is($datetime1->move_to_nth_dow(3,   'Wed')->day_of_month,      21,    'Third Wednesday of Dec 2011 is the 21st');
     is($datetime1->move_to_nth_dow(5,   'SuNdaY'),                 undef, '... and there is no 5th Sunday that year.');
@@ -134,6 +176,11 @@ subtest 'move_to_nth_dow' => sub {
             $d = $d->plus_time_interval('1d');
         }
     };
+};
+
+subtest truncate_to_month => sub {
+    my $d = Date::Utility->new('2001-03-02');
+    is($d->truncate_to_month->datetime_yyyymmdd_hhmmss, '2001-03-01 00:00:00');
 };
 
 1;
