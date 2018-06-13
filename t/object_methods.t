@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -84,6 +84,15 @@ subtest 'truncate_to_day' => sub {
     is($datetime1->truncate_to_day->datetime_iso8601, "2011-12-13T00:00:00Z", "Truncates time correctly");
     is($datetime1->truncate_to_day->is_same_as($datetime2->truncate_to_day), 1,     "is_same_as for truncated objects on the same day");
     is($datetime2->truncate_to_day->is_same_as($datetime3->truncate_to_day), undef, "is_same_as for truncated objects on the different days");
+};
+
+my $datetime4 = Date::Utility->new('2011-12-13 07:59:59');
+my $datetime5 = Date::Utility->new('2011-12-14 07:03:01');
+
+subtest 'truncate_to_hour' => sub {
+    is($datetime1->truncate_to_hour->datetime_iso8601, "2011-12-13T07:00:00Z", "Truncates time correctly");
+    is($datetime1->truncate_to_hour->is_same_as($datetime4->truncate_to_hour), 1,     "is_same_as for truncated objects on the same day");
+    is($datetime2->truncate_to_hour->is_same_as($datetime4->truncate_to_hour), undef, "is_same_as for truncated objects on the different days");
 };
 
 subtest 'plus_time_interval' => sub {
