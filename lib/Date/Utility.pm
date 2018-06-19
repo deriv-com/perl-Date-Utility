@@ -1024,7 +1024,7 @@ sub truncate_to_month {
 Returns a Date::Utility object with the minutes and seconds truncated out of it.
 
 For instance, '2011-12-13 23:24:25' will return a new Date::Utility
-object representing '2011-12-01 23:00:00'
+object representing '2011-12-13 23:00:00'
 
 =cut
 
