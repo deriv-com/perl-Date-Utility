@@ -11,7 +11,7 @@ Date::Utility - A class that represents a datetime in various format
 
 =cut
 
-our $VERSION = '1.07';
+our $VERSION = '1.08';
 
 =head1 SYNOPSIS
 
@@ -1017,6 +1017,20 @@ object representing '2011-12-01 00:00:00'
 sub truncate_to_month {
     my ($self) = @_;
     return Date::Utility->new(sprintf("%04d-%02d-01", $self->year, $self->month));
+}
+
+=head2 truncate_to_hour
+
+Returns a Date::Utility object with the minutes and seconds truncated out of it.
+
+For instance, '2011-12-13 23:24:25' will return a new Date::Utility
+object representing '2011-12-13 23:00:00'
+
+=cut
+
+sub truncate_to_hour {
+    my ($self) = @_;
+    return Date::Utility->new(sprintf("%04d-%02d-%02d %02d:00:00", $self->year, $self->month, $self->day_of_month, $self->hour));
 }
 
 =head2 today
