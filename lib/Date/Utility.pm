@@ -556,7 +556,7 @@ sub days_between {
 
 =head2 is_before
 
-Returns a boolena which indicates whether this date object is earlier in time than the supplied date object.
+Returns a boolean which indicates whether this date object is earlier in time than the supplied date object.
 
 =cut
 
@@ -571,7 +571,7 @@ sub is_before {
 
 =head2 is_after
 
-Returns a boolena which indicates whether this date object is later in time than the supplied date object.
+Returns a boolean which indicates whether this date object is later in time than the supplied date object.
 
 =cut
 
@@ -586,7 +586,7 @@ sub is_after {
 
 =head2 is_same_as
 
-Returns a boolena which indicates whether this date object is the same time as the supplied date object.
+Returns a boolean which indicates whether this date object is the same time as the supplied date object.
 
 =cut
 
@@ -794,7 +794,7 @@ sub timezone_offset {
 
 =head2 is_dst_in_zone
 
-Returns a boolena which indicates whether a certain zone is in DST at the given epoch
+Returns a boolean which indicates whether a certain zone is in DST at the given epoch
 
 =cut
 
