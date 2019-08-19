@@ -827,6 +827,9 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
     sub timezone_offset {
         my ($self, $tzname) = @_;
 
+        if ($tzname eq 'UTZ' or $tzname eq 'Z') {
+            return Time::Duration::Concise::Localize->new(interval => DateTime::TimeZone::UTC->offset_for_datetime);
+        }
         my $tm = $self->{epoch};
         my $spans = $cache_for->($tm, $tzname);
 
@@ -842,6 +845,9 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
     sub is_dst_in_zone {
         my ($self, $tzname) = @_;
 
+        if ($tzname eq 'UTZ' or $tzname eq 'Z') {
+            return Time::Duration::Concise::Localize->new(interval => DateTime::TimeZone::UTC->is_dst_for_datetime);
+        }
         my $tm = $self->{epoch};
         my $spans = $cache_for->($tm, $tzname);
 
