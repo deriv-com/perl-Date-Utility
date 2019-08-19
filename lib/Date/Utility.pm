@@ -436,8 +436,6 @@ sub new {
         $popular{$new_params->{epoch}} = $obj;
     }
 
-    $obj->{_truncated} = !($new_params->{epoch} % 86400);
-
     return $obj;
 
 }
@@ -1049,12 +1047,10 @@ object representing '2011-12-13 00:00:00'
 sub truncate_to_day {
     my ($self) = @_;
 
-    return $self if $self->{_truncated};
-
     my $epoch  = $self->{epoch};
-    my $tepoch = $epoch - $epoch % 86400;
-
-    return $popular{$tepoch} // Date::Utility->new($tepoch);
+    my $rem = $epoch % 86400;
+    return $self if $rem == 0;
+    return Date::Utility->new($epoch - $rem);
 }
 
 =head2 truncate_to_month
