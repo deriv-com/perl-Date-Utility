@@ -9,7 +9,7 @@ use DateTime;
 
 my $begin = time - 366*24*3600; # about 1y back
 my $range = 10*366*24*3600;     # about 10y
-my @zones = (qw!Europe/London Europe/Berlin Asia/Tehran America/New_York Asia/Tokyo!);
+my @zones = (qw!Europe/London Europe/Berlin Asia/Tehran America/New_York Asia/Tokyo Australia/Sydney!);
 
 sub is_dst_in_zone_old {
     my ($epoch, $timezone) = @_;
