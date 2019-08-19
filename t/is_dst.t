@@ -22,7 +22,7 @@ sub is_dst_in_zone_old {
     return $dt->is_dst;
 }
 
-for (1..1000000) {
+for (1..200000) {
     my $tm = $begin + int rand $range;
     my $tz = $zones[int rand (0+@zones)];
     is +Date::Utility->new($tm)->is_dst_in_zone($tz), is_dst_in_zone_old($tm, $tz), "time=$tm tz=$tz";
