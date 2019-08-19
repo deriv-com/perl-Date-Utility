@@ -827,7 +827,8 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
     sub timezone_offset {
         my ($self, $tzname) = @_;
 
-        my $spans = $cache_for->($self->{epoch}, $tzname);
+        my $tm = $self->{epoch};
+        my $spans = $cache_for->($tm, $tzname);
 
         for my $sp (@$spans) {
             if ($tm < $sp->[1]) {
@@ -841,7 +842,8 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
     sub is_dst_in_zone {
         my ($self, $tzname) = @_;
 
-        my $spans = $cache_for->($self->{epoch}, $tzname);
+        my $tm = $self->{epoch};
+        my $spans = $cache_for->($tm, $tzname);
 
         for my $sp (@$spans) {
             if ($tm < $sp->[1]) {
