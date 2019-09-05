@@ -37,7 +37,6 @@ A class that represents a datetime in various format
 
 use Moose;
 use Carp qw( confess croak );
-use DateTime;
 use POSIX qw( floor );
 use Scalar::Util qw(looks_like_number);
 use Tie::Hash::LRU;
@@ -437,8 +436,6 @@ sub new {
         $popular{$new_params->{epoch}} = $obj;
     }
 
-    $obj->{_truncated} = !($new_params->{epoch} % 86400);
-
     return $obj;
 
 }
@@ -781,32 +778,85 @@ Returns a TimeInterval which represents the difference between UTC and the time 
 
 =cut
 
-sub timezone_offset {
-    my ($self, $timezone) = @_;
-
-    my $dt = DateTime->from_epoch(
-        epoch     => $self->{epoch},
-        time_zone => $timezone
-    );
-
-    return Time::Duration::Concise::Localize->new(interval => $dt->offset);
-}
-
 =head2 is_dst_in_zone
 
 Returns a boolean which indicates whether a certain zone is in DST at the given epoch
 
 =cut
 
-sub is_dst_in_zone {
-    my ($self, $timezone) = @_;
+{
+    use DateTime;
+    use DateTime::TimeZone;
 
-    my $dt = DateTime->from_epoch(
-        epoch     => $self->{epoch},
-        time_zone => $timezone
-    );
+    my $bignum = 20000000;
 
-    return $dt->is_dst;
+    my %cache;
+    my $cache_for = sub {
+        my $tm = shift;
+        my $tzname = shift;
+        my $k = int $tm/$bignum;
+
+        if (my $val = $cache{"$k $tzname"}) {
+            return $val;
+        }
+
+        my $z = DateTime::TimeZone->new(name => $tzname);
+        my $start_of_interval = $k * $bignum;
+        my $dt = DateTime->from_epoch(epoch => $start_of_interval);
+        my $rdoff = $dt->utc_rd_as_seconds - $start_of_interval;
+
+        my ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
+        $_ -= $rdoff for ($span_start, $span_end);
+
+        my @val = ([$span_start, $span_end, $off, $is_dst, $name]);
+
+        while ($span_end < ($k+1) * $bignum) {
+            $dt = DateTime->from_epoch(epoch => $span_end);
+
+            ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
+            $_ -= $rdoff for ($span_start, $span_end);
+
+            push @val, [$span_start, $span_end, $off, $is_dst, $name];
+        }
+
+        return $cache{"$k $tzname"} = \@val;
+    };
+
+    sub timezone_offset {
+        my ($self, $tzname) = @_;
+
+        if ($tzname eq 'UTC' or $tzname eq 'Z') {
+            return Time::Duration::Concise::Localize->new(interval => DateTime::TimeZone::UTC->offset_for_datetime);
+        }
+        my $tm = $self->{epoch};
+        my $spans = $cache_for->($tm, $tzname);
+
+        for my $sp (@$spans) {
+            if ($tm < $sp->[1]) {
+                return Time::Duration::Concise::Localize->new(interval => $sp->[2]);
+            }
+        }
+
+        die "time $tm not found in span";
+    }
+
+    sub is_dst_in_zone {
+        my ($self, $tzname) = @_;
+
+        if ($tzname eq 'UTC' or $tzname eq 'Z') {
+            return DateTime::TimeZone::UTC->is_dst_for_datetime;
+        }
+        my $tm = $self->{epoch};
+        my $spans = $cache_for->($tm, $tzname);
+
+        for my $sp (@$spans) {
+            if ($tm < $sp->[1]) {
+                return $sp->[3];
+            }
+        }
+
+        die "time $tm not found in span";
+    }
 }
 
 =head2 plus_time_interval
@@ -997,12 +1047,10 @@ object representing '2011-12-13 00:00:00'
 sub truncate_to_day {
     my ($self) = @_;
 
-    return $self if $self->{_truncated};
-
     my $epoch  = $self->{epoch};
-    my $tepoch = $epoch - $epoch % 86400;
-
-    return $popular{$tepoch} // Date::Utility->new($tepoch);
+    my $rem = $epoch % 86400;
+    return $self if $rem == 0;
+    return Date::Utility->new($epoch - $rem);
 }
 
 =head2 truncate_to_month
