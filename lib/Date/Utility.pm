@@ -455,13 +455,12 @@ my $time_only_tz       = qr/([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:G
 my $date_with_time     = qr /^([0-3]?[0-9])-($mon_re)-([0-9]{2}) $time_only_tz$/;
 my $numeric_date_regex = qr/([12][0-9]{3})(-?)([01]?[0-9])\2([0-3]?[0-9])/;
 my $numeric_date_only  = qr/^$numeric_date_regex$/;
-my $fully_specced      = qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])(?:T|\s)?([0-2]?[0-9]):?([0-5]?[0-9]):?([0-5]?[0-9])(\.[0-9]+)?(?:Z)?$/;
+my $fully_specced      = qr/^([12][0-9]{3})(-?)([01]?[0-9])\2([0-3]?[0-9])(?:T|\s)?([0-2]?[0-9]):?([0-5]?[0-9]):?([0-5]?[0-9])(\.[0-9]+)?(?:Z)?$/;
 my $numeric_date_only_dd_mm_yyyy = qr/^([0-3]?[0-9])-([01]?[0-9])-([12][0-9]{3})$/;
 my $datetime_yyyymmdd_hhmmss_TZ  = qr/^$numeric_date_regex $time_only_tz$/;
 
 sub _parse_datetime_param {
     my $datetime = shift;
-
     # If it's date only, take the epoch at midnight.
     my ($hour, $minute, $second) = (0, 0, 0);
     my ($day, $month, $year);
@@ -469,38 +468,38 @@ sub _parse_datetime_param {
     # The ordering of these regexes is an attempt to match early
     # to avoid extra comparisons.  If our mix of supplied datetimes changes
     # it might be worth revisiting this.
-    if ($datetime =~ $sub_second) {    
+    if ($datetime =~ $sub_second) {
         # We have an epoch with sub second precision which we can't handle
         return {epoch => int($datetime)};
-    } elsif ($datetime =~ $date_only) {    
+    } elsif ($datetime =~ $date_only) {
         $day   = $1;
         $month = month_abbrev_to_number($2);
         $year  = $3;
-    } elsif ($datetime =~ $date_with_time) {    
+    } elsif ($datetime =~ $date_with_time) {
         $day    = $1;
         $month  = month_abbrev_to_number($2);
         $year   = $3;
         $hour   = $4;
         $minute = $5;
-        if (defined $6) {    
+        if (defined $6) {
             $second = $6;
         }
-    } elsif ($datetime =~ $numeric_date_only) {    
+    } elsif ($datetime =~ $numeric_date_only) {
         $day   = $4;
         $month = $3;
         $year  = $1;
-    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {    
+    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {
         $day   = $1;
         $month = $2;
         $year  = $3;
-    } elsif ($datetime =~ $fully_specced) {    
-        $day    = $3;
-        $month  = $2;
+    } elsif ($datetime =~ $fully_specced) {
         $year   = $1;
-        $hour   = $4;
-        $minute = $5;
-        $second = $6;
-    } elsif ($datetime =~ $datetime_yyyymmdd_hhmmss_TZ) {    
+        $month  = $3;
+        $day    = $4;
+        $hour   = $5;
+        $minute = $6;
+        $second = $7;
+    } elsif ($datetime =~ $datetime_yyyymmdd_hhmmss_TZ) {
         $year   = $1;
         $month  = $3;
         $day    = $4;
@@ -509,7 +508,7 @@ sub _parse_datetime_param {
         $second = $7;
     }
     # Type constraints mean we can't ever end up in here.
-    else {    
+    else {
         confess "Invalid datetime format: $datetime";
     }
 
