@@ -791,25 +791,25 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
 
     my %cache;
     my $cache_for = sub {
-        my $tm = shift;
+        my $tm     = shift;
         my $tzname = shift;
-        my $k = int $tm/$bignum;
+        my $k      = int $tm / $bignum;
 
         if (my $val = $cache{"$k $tzname"}) {
             return $val;
         }
 
-        my $z = DateTime::TimeZone->new(name => $tzname);
+        my $z                 = DateTime::TimeZone->new(name => $tzname);
         my $start_of_interval = $k * $bignum;
-        my $dt = DateTime->from_epoch(epoch => $start_of_interval);
-        my $rdoff = $dt->utc_rd_as_seconds - $start_of_interval;
+        my $dt                = DateTime->from_epoch(epoch => $start_of_interval);
+        my $rdoff             = $dt->utc_rd_as_seconds - $start_of_interval;
 
         my ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
         $_ -= $rdoff for ($span_start, $span_end);
 
         my @val = ([$span_start, $span_end, $off, $is_dst, $name]);
 
-        while ($span_end < ($k+1) * $bignum) {
+        while ($span_end < ($k + 1) * $bignum) {
             $dt = DateTime->from_epoch(epoch => $span_end);
 
             ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
@@ -1046,8 +1046,8 @@ object representing '2011-12-13 00:00:00'
 sub truncate_to_day {
     my ($self) = @_;
 
-    my $epoch  = $self->{epoch};
-    my $rem = $epoch % 86400;
+    my $epoch = $self->{epoch};
+    my $rem   = $epoch % 86400;
     return $self if $rem == 0;
     return Date::Utility->new($epoch - $rem);
 }
