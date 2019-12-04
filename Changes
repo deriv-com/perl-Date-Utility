@@ -1,6 +1,6 @@
 Revision history for Date-Utility
 
-{{$NEXT}}
+{{$NEXT}} Check some malformed strings
 
 1.09      2018-06-21 04:34:43+00:00 UTC
         Add truncate_to_hour()
