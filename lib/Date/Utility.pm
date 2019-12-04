@@ -469,47 +469,47 @@ sub _parse_datetime_param {
     # The ordering of these regexes is an attempt to match early
     # to avoid extra comparisons.  If our mix of supplied datetimes changes
     # it might be worth revisiting this.
-    if ($datetime =~ $sub_second) {    warn "here";
+    if ($datetime =~ $sub_second) {    
         # We have an epoch with sub second precision which we can't handle
         return {epoch => int($datetime)};
-    } elsif ($datetime =~ $date_only) {    warn "here";
+    } elsif ($datetime =~ $date_only) {    
         $day   = $1;
         $month = month_abbrev_to_number($2);
         $year  = $3;
-    } elsif ($datetime =~ $date_with_time) {    warn "here";
+    } elsif ($datetime =~ $date_with_time) {    
         $day    = $1;
         $month  = month_abbrev_to_number($2);
         $year   = $3;
         $hour   = $4;
         $minute = $5;
-        if (defined $6) {    warn "here";
+        if (defined $6) {    
             $second = $6;
         }
-    } elsif ($datetime =~ $numeric_date_only) {    warn "here";
+    } elsif ($datetime =~ $numeric_date_only) {    
         $day   = $4;
         $month = $3;
         $year  = $1;
-    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {    warn "here";
+    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {    
         $day   = $1;
         $month = $2;
         $year  = $3;
-    } elsif ($datetime =~ $fully_specced) {    warn "here";
+    } elsif ($datetime =~ $fully_specced) {    
         $day    = $3;
         $month  = $2;
         $year   = $1;
         $hour   = $4;
         $minute = $5;
         $second = $6;
-    } elsif ($datetime =~ $datetime_yyyymmdd_hhmmss_TZ) {    warn "here";
+    } elsif ($datetime =~ $datetime_yyyymmdd_hhmmss_TZ) {    
         $year   = $1;
-        $month  = $2;
-        $day    = $3;
-        $hour   = $4;
-        $minute = $5;
-        $second = $6;
+        $month  = $3;
+        $day    = $4;
+        $hour   = $5;
+        $minute = $6;
+        $second = $7;
     }
     # Type constraints mean we can't ever end up in here.
-    else {    warn "here";
+    else {    
         confess "Invalid datetime format: $datetime";
     }
 
