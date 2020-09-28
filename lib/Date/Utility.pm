@@ -72,6 +72,7 @@ has [qw(
         day_as_string
         full_day_name
         month_as_string
+        month_full_name
         http_expires_format
         iso8601
         time
@@ -641,6 +642,18 @@ sub _build_month_as_string {
     my $self = shift;
 
     return month_number_to_abbrev($self->month);
+}
+
+=head2 full_month_name
+
+Returns the full name of current month. Example: January
+
+=cut
+
+sub _build_full_month_name {
+    my $self = shift;
+
+    return month_number_to_fullname($self->month);
 }
 
 =head2 http_expires_format
