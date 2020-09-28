@@ -95,10 +95,10 @@ has [qw(
         is_a_weekend
         is_a_weekday
         )
-    ] => (
+] => (
     is         => 'ro',
     lazy_build => 1,
-    );
+);
 
 sub _build__gmtime_attrs {
     my $self = shift;
@@ -620,8 +620,8 @@ my %days_to_num = map {
     my $day = lc $day_names[$_];
     (
         substr($day, 0, 3) => $_,    # Three letter abbreviation
-        $day => $_,                  # Full day name
-        $_   => $_,                  # Number as number
+        $day               => $_,    # Full day name
+        $_                 => $_,    # Number as number
     );
 } 0 .. $#day_names;
 
@@ -792,25 +792,25 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
 
     my %cache;
     my $cache_for = sub {
-        my $tm = shift;
+        my $tm     = shift;
         my $tzname = shift;
-        my $k = int $tm/$bignum;
+        my $k      = int $tm / $bignum;
 
         if (my $val = $cache{"$k $tzname"}) {
             return $val;
         }
 
-        my $z = DateTime::TimeZone->new(name => $tzname);
+        my $z                 = DateTime::TimeZone->new(name => $tzname);
         my $start_of_interval = $k * $bignum;
-        my $dt = DateTime->from_epoch(epoch => $start_of_interval);
-        my $rdoff = $dt->utc_rd_as_seconds - $start_of_interval;
+        my $dt                = DateTime->from_epoch(epoch => $start_of_interval);
+        my $rdoff             = $dt->utc_rd_as_seconds - $start_of_interval;
 
         my ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
         $_ -= $rdoff for ($span_start, $span_end);
 
         my @val = ([$span_start, $span_end, $off, $is_dst, $name]);
 
-        while ($span_end < ($k+1) * $bignum) {
+        while ($span_end < ($k + 1) * $bignum) {
             $dt = DateTime->from_epoch(epoch => $span_end);
 
             ($span_start, $span_end, undef, undef, $off, $is_dst, $name) = @{$z->_span_for_datetime(utc => $dt)};
@@ -828,7 +828,7 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
         if ($tzname eq 'UTC' or $tzname eq 'Z') {
             return Time::Duration::Concise::Localize->new(interval => DateTime::TimeZone::UTC->offset_for_datetime);
         }
-        my $tm = $self->{epoch};
+        my $tm    = $self->{epoch};
         my $spans = $cache_for->($tm, $tzname);
 
         for my $sp (@$spans) {
@@ -846,7 +846,7 @@ Returns a boolean which indicates whether a certain zone is in DST at the given 
         if ($tzname eq 'UTC' or $tzname eq 'Z') {
             return DateTime::TimeZone::UTC->is_dst_for_datetime;
         }
-        my $tm = $self->{epoch};
+        my $tm    = $self->{epoch};
         my $spans = $cache_for->($tm, $tzname);
 
         for my $sp (@$spans) {
@@ -959,7 +959,7 @@ sub move_to_nth_dow {
     my $dow = $days_to_num{lc $dow_abb} // croak 'Invalid day of week. We got [' . $dow_abb . ']';
 
     my $dow_first = (7 - ($self->day_of_month - 1 - $self->day_of_week)) % 7;
-    my $dom = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
+    my $dom       = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
 
     return try { Date::Utility->new(join '-', $self->year, $self->month, $dom) };
 }
@@ -1013,6 +1013,37 @@ sub month_abbrev_to_number {
     return $abbrev_number_map{$which};
 }
 
+=head1 STATIC METHODS
+
+=head2 month_number_to_fullname
+
+Static method returns a standard mapping from month numbers to fullname.
+
+=cut
+
+my %number_fullname_map = (
+    1  => 'January',
+    2  => 'February',
+    3  => 'March',
+    4  => 'April',
+    5  => 'May',
+    6  => 'June',
+    7  => 'July',
+    8  => 'August',
+    9  => 'September',
+    10 => 'October',
+    11 => 'November',
+    12 => 'December',
+);
+
+sub month_number_to_fullname {
+
+    # Deal with leading zeroes.
+    my $which = int shift;
+
+    return $number_fullname_map{$which};
+}
+
 =head2 is_epoch_timestamp
 
 Check if a given datetime is an epoch timestemp, i.e. an integer of under 14 digits.
@@ -1047,8 +1078,8 @@ object representing '2011-12-13 00:00:00'
 sub truncate_to_day {
     my ($self) = @_;
 
-    my $epoch  = $self->{epoch};
-    my $rem = $epoch % 86400;
+    my $epoch = $self->{epoch};
+    my $rem   = $epoch % 86400;
     return $self if $rem == 0;
     return Date::Utility->new($epoch - $rem);
 }
