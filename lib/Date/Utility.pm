@@ -67,12 +67,13 @@ has [qw(
         date_ddmmmyy
         date_yyyymmdd
         date_ddmmmyyyy
+        date_ddmonthyyyy
         days_in_month
         db_timestamp
         day_as_string
         full_day_name
         month_as_string
-        month_full_name
+        full_month_name
         http_expires_format
         iso8601
         time
@@ -326,6 +327,19 @@ sub _build_date_ddmmmyyyy {
     return join('-', ($self->day_of_month, $self->month_as_string, $self->year));
 }
 
+=head2 date_ddmonthyyyy
+
+Returns date in dd-month-yyyy format
+
+=cut
+
+sub _build_date_ddmonthyyyy {
+    my $self = shift;
+
+    return join('-', ($self->day_of_month, $self->full_month_name, $self->year));
+}
+
+
 =head2 date
 
 Returns datetime in YYYY-MM-DD format
@@ -351,7 +365,6 @@ sub _build_date_ddmmmyy {
 }
 
 =head2 days_since_epoch
-
 
 Returns number of days since 1970-01-01
 
