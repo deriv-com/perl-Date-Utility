@@ -336,7 +336,7 @@ Returns date in dd-month-yyyy format
 sub _build_date_ddmonthyyyy {
     my $self = shift;
 
-    return join('-', ($self->day_of_month, $self->full_month_name, $self->year));
+    return join(' ', ($self->day_of_month, $self->full_month_name, $self->year));
 }
 
 
