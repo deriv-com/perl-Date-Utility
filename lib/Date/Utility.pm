@@ -1064,10 +1064,7 @@ my %number_fullname_map = (
 
 sub month_number_to_fullname {
 
-    # Deal with leading zeroes.
-    my $which = int shift;
-
-    return $number_fullname_map{$which};
+     return $number_fullname_map{int shift};
 }
 
 =head2 is_epoch_timestamp
@@ -1360,4 +1357,3 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 =cut
-
