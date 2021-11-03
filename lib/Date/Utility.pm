@@ -454,7 +454,7 @@ sub new {
 
 }
 
-=head2 _parse_datetime_parm
+=head2 _parse_datetime_param
 
 User may supplies datetime parameters but it currently only supports the following formats:
 dd-mmm-yy ddhddGMT, dd-mmm-yy, dd-mmm-yyyy, dd-Mmm-yy hh:mm:ssGMT, YYYY-MM-DD, YYYYMMDD, YYYYMMDDHHMMSS, yyyy-mm-dd hh:mm:ss, yyyy-mm-ddThh:mm:ss or yyyy-mm-ddThh:mm:ssZ.
