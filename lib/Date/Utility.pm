@@ -123,10 +123,6 @@ sub _build_second {
     return sprintf '%02d', $self->_gmtime_attrs->{second};
 }
 
-*second = \&_build_second;
-
-sub 
-
 =head2 minute
 
 =cut
@@ -136,8 +132,6 @@ sub _build_minute {
 
     return sprintf '%02d', $self->_gmtime_attrs->{minute};
 }
-
-*minute = \&_build_minute;
 
 =head2 hour
 
@@ -149,8 +143,6 @@ sub _build_hour {
     return sprintf '%02d', $self->_gmtime_attrs->{hour};
 }
 
-*hour = \&_build_hour;
-
 =head2 day_of_month
 
 =cut
@@ -160,8 +152,6 @@ sub _build_day_of_month {
 
     return $self->_gmtime_attrs->{day_of_month};
 }
-
-*day_of_month = \&_build_day_of_month;
 
 =head2 month
 
@@ -175,8 +165,6 @@ sub _build_month {
     return ++$gm_mon;
 }
 
-*month = \&_build_month;
-
 =head2 quarter_of_year
 
 =cut
@@ -188,8 +176,6 @@ sub _build_quarter_of_year {
 
 }
 
-*quarter_of_year = \&_build_quarter_of_year;
-
 =head2 day_of_week
 
     return day of week begin with 0
@@ -199,8 +185,6 @@ sub _build_quarter_of_year {
 sub _build_day_of_week {
     return ((shift->{epoch} / 86400) + 4) % 7;
 }
-
-*day_of_week = \&_build_day_of_week;
 
 =head2 day_of_year
 
