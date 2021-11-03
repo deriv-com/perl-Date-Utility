@@ -210,6 +210,8 @@ sub _build_day_of_year {
     return $self->_gmtime_attrs->{day_of_year} + 1;
 }
 
+*day_of_year =\&_build_day_of_year;
+
 =head2 year
 
 =cut
@@ -220,6 +222,8 @@ sub _build_year {
     return $self->_gmtime_attrs->{year} + 1900;
 }
 
+*year = \&_build_year;
+
 =head2 time
 
 =cut
@@ -229,6 +233,9 @@ sub _build_time {
 
     return $self->hour . 'h' . $self->minute;
 }
+
+# this shadows perl's "time". Should we add alias?
+*time = \&_build_time;
 
 =head2 time_hhmm
 
@@ -242,6 +249,8 @@ sub _build_time_hhmm {
     return join(':', ($self->hour, $self->minute));
 }
 
+*time_hhmm = \&_build_time_hhmm;
+
 =head2 time_hhmmss
 
 Returns time in hh:mm:ss format
@@ -254,6 +263,8 @@ sub _build_time_hhmmss {
     return join(':', ($self->time_hhmm, $self->second));
 }
 
+*time_hhmmss = \&_build_time_hhmmss;
+
 =head2 time_cutoff
 
 Set the timezone for cutoff to UTC
@@ -265,6 +276,8 @@ sub _build_time_cutoff {
 
     return 'UTC ' . $self->time_hhmm;
 }
+
+*time_cutoff = \&_build_time_cutoff;
 
 =head2 year_in_two_digit
 
@@ -283,6 +296,8 @@ sub _build_year_in_two_digit {
     return sprintf '%02d', $two_digit_year;
 }
 
+*year_in_two_digit = \&_build_year_in_two_digit;
+
 =head2 timezone
 
 Set the timezone to GMT
@@ -292,6 +307,8 @@ Set the timezone to GMT
 sub _build_timezone {
     return 'GMT';
 }
+
+*timezone = \&_build_timezone;
 
 =head2 datetime
 
@@ -305,6 +322,8 @@ sub _build_datetime {
     return $self->db_timestamp;
 }
 
+*datetime = \&_build_datetime;
+
 =head2 datetime_ddmmmyy_hhmmss_TZ
 
 Returns datetime in "dd-mmm-yy hh:mm:ssGMT" format
@@ -316,6 +335,8 @@ sub _build_datetime_ddmmmyy_hhmmss_TZ {
 
     return $self->date_ddmmmyy . ' ' . $self->time_hhmmss . $self->timezone;
 }
+
+*datetime_ddmmmyy_hhmmss_TZ = \&_build_datetime_ddmmmyy_hhmmss_TZ;
 
 =head2 datetime_ddmmmyy_hhmmss
 
@@ -329,6 +350,8 @@ sub _build_datetime_ddmmmyy_hhmmss {
     return $self->date_ddmmmyy . ' ' . $self->time_hhmmss;
 }
 
+*datetime_ddmmmyy_hhmmss = \&_build_datetime_ddmmmyy_hhmmss;
+
 =head2 date_ddmmmyyyy
 
 Returns date in dd-mmm-yyyy format
@@ -340,6 +363,8 @@ sub _build_date_ddmmmyyyy {
 
     return join('-', ($self->day_of_month, $self->month_as_string, $self->year));
 }
+
+*date_ddmmmyyyy = \&_build_date_ddmmmyyyy;
 
 =head2 date_ddmonthyyyy
 
@@ -353,6 +378,8 @@ sub _build_date_ddmonthyyyy {
     return join(' ', ($self->day_of_month, $self->full_month_name, $self->year));
 }
 
+*date_ddmonthyyyy = \&_build_date_ddmonthyyyy;
+
 
 =head2 date
 
@@ -365,6 +392,8 @@ sub _build_date {
 
     return $self->date_yyyymmdd;
 }
+
+*date = \&_build_date;
 
 =head2 date_ddmmmyy
 
