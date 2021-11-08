@@ -1177,7 +1177,7 @@ sub plus_years {
 
 *_plus_years = \&plus_years;
 
-=head2 _minus_years
+=head2 minus_years
 
 Returns a new L<Date::Utility> object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1187,12 +1187,14 @@ e.g.
 
 =cut
 
-sub _minus_years {
+sub minus_years {
     my ($self, $years) = @_;
     return $self->_plus_years(-$years);
 }
 
-=head2 _plus_months
+*_minus_years = \&minus_years;
+
+=head2 plus_months
 
 Returns a new L<Date::Utility> object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1202,7 +1204,7 @@ e.g.
 
 =cut
 
-sub _plus_months {
+sub plus_months {
     my ($self, $months) = @_;
     (looks_like_number($months) && $months == int($months)) || die "Need a integer months number";
     my $new_year  = $self->year;
@@ -1219,7 +1221,9 @@ sub _plus_months {
     return $self->_create_trimmed_date($new_year, $new_month, $new_day);
 }
 
-=head2 _minus_months
+*_plus_months = \&plus_months;
+
+=head2 minus_months
 
 Returns a new L<Date::Utility> object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1229,24 +1233,28 @@ e.g.
 
 =cut
 
-sub _minus_months {
+sub minus_months {
     my ($self, $months) = @_;
     return $self->_plus_months(-$months);
 }
 
-=head2 _create_trimmed_date
+*_minus_months = \&minus_months;
+
+=head2 create_trimmed_date
 
 Return a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
 
 =cut
 
-sub _create_trimmed_date {
+sub create_trimmed_date {
     my ($self, $year, $month, $day) = @_;
     my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $year, $month))->days_in_month;
     $day = $day < $max_day ? $day : $max_day;
     my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $self->hour, $self->minute, $self->second);
     return __PACKAGE__->new($date_string);
 }
+
+*_create_trimmed_date = \&create_trimmed_date;
 
 no Moose;
 
