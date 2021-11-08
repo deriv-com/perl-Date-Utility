@@ -1157,7 +1157,7 @@ sub today {
     return $today_obj;
 }
 
-=head2 _plus_years
+=head2 plus_years
 
 Returns a new L<Date::Utility> object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
@@ -1167,13 +1167,15 @@ e.g.
 
 =cut
 
-sub _plus_years {
+sub plus_years {
     my ($self, $years) = @_;
     die "Need a integer years number"
         unless looks_like_number($years)
         and $years == int($years);
     return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
 }
+
+*_plus_years = \&plus_years;
 
 =head2 _minus_years
 
