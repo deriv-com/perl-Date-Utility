@@ -1171,7 +1171,7 @@ Returns a new L<Date::Utility> object plus the given years. If the day is greate
 e.g.
 
     print Date::Utility->new('2000-02-29')->plus_years(1)->date_yyyymmdd;
-    # will got 2001-02-28
+    # will print 2001-02-28
 
 =cut
 
@@ -1187,11 +1187,19 @@ sub plus_years {
 
 =head2 minus_years
 
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of years to be added. (Integer)
+
+=back
+
 Returns a new L<Date::Utility> object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-02-29')->minus_years(1)->date_yyyymmdd;
-    # will got 1999-02-28
+    # will print 1999-02-28
 
 =cut
 
