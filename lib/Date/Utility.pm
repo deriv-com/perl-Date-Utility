@@ -1159,17 +1159,25 @@ sub today {
 
 =head2 plus_years
 
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of years to be added. (Integer)
+
+=back
+
 Returns a new L<Date::Utility> object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
-    print Date::Utility->new('2000-02-29')->_plus_years(1)->date_yyyymmdd;
+    print Date::Utility->new('2000-02-29')->plus_years(1)->date_yyyymmdd;
     # will got 2001-02-28
 
 =cut
 
 sub plus_years {
     my ($self, $years) = @_;
-    die "Need a integer years number"
+    die "Need an integer years number"
         unless looks_like_number($years)
         and $years == int($years);
     return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
