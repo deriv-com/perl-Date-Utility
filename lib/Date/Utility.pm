@@ -1274,7 +1274,19 @@ sub minus_months {
 
 =head2 create_trimmed_date
 
-Return a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<year> - calendar year of the date (Integer)
+
+=item * C<month> - calendar month of the date. (Integer)
+
+=item * C<day> - day of the month of the date (Integer)
+
+=back
+
+Returns a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
 
 =cut
 
