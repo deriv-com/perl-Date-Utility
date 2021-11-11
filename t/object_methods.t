@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -208,6 +208,24 @@ subtest add_subract_years => sub {
     $date = Date::Utility->new('2002-03-02');
     $next_year = $date->minus_years(1);
     is($next_year->date_yyyymmdd(), '2001-03-02');
+};
+
+subtest add_subract_months => sub {
+    my $date = Date::Utility->new('2001-03-02');
+    my $next_year = $date->plus_months(1);
+    is($next_year->date_yyyymmdd(), '2001-04-02');
+    
+    $date = Date::Utility->new('2000-02-28');
+    $next_year = $date->plus_months(1);
+    is($next_year->date_yyyymmdd(), '2000-03-28');
+    
+    $date = Date::Utility->new('2001-02-28');
+    $next_year = $date->minus_months(1);
+    is($next_year->date_yyyymmdd(), '2001-01-28');
+    
+    $date = Date::Utility->new('2002-03-02');
+    $next_year = $date->minus_months(1);
+    is($next_year->date_yyyymmdd(), '2002-02-02');
 };
 
 1;
