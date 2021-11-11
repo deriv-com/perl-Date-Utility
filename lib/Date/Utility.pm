@@ -1191,7 +1191,7 @@ Takes the following argument as named parameter:
 
 =over 4
 
-=item * C<years> - number of years to be added. (Integer)
+=item * C<years> - number of years to be subracted. (Integer)
 
 =back
 
@@ -1212,11 +1212,19 @@ sub minus_years {
 
 =head2 plus_months
 
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of months to be added. (Integer)
+
+=back
+
 Returns a new L<Date::Utility> object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-01-31')->plus_months(1)->date_yyyymmdd;
-    # will got 2000-02-28
+    # will print 2000-02-28
 
 =cut
 
@@ -1241,11 +1249,19 @@ sub plus_months {
 
 =head2 minus_months
 
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of months to be subracted. (Integer)
+
+=back
+
 Returns a new L<Date::Utility> object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-03-31')->minus_months(1)->date_yyyymmdd;
-    # will got 2000-02-28
+    # will print 2000-02-28
 
 =cut
 
