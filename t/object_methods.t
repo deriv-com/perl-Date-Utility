@@ -109,7 +109,7 @@ subtest 'minus_time_interval' => sub {
 };
 
 subtest 'plus years & minus years' => sub {
-    throws_ok { $datetime1->plus_time_interval("12.3y") } qr/Need a integer/, 'need integer';
+    throws_ok { $datetime1->plus_time_interval("12.3y") } qr/Need an integer/, 'need integer';
     my @test_cases = (['2000-01-01', 1, '2001-01-01'], ['2000-01-1', 2, '2002-01-01'], ['2000-02-29', 1, '2001-02-28']);
     for my $t (@test_cases) {
         is(Date::Utility->new($t->[0])->plus_time_interval("$t->[1]y")->date_yyyymmdd, $t->[2], "date $t->[0] plus $t->[1] years should be $t->[2]");
@@ -118,7 +118,7 @@ subtest 'plus years & minus years' => sub {
 };
 
 subtest 'plus months & minus months' => sub {
-    throws_ok { $datetime1->plus_time_interval("12.3mo") } qr/Need a integer/, 'need integer';
+    throws_ok { $datetime1->plus_time_interval("12.3mo") } qr/Need an integer/, 'need integer';
     my @test_cases = (
         ['2000-01-01', 1,  '2000-02-01'],
         ['2000-01-01', 2,  '2000-03-01'],

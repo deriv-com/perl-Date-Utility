@@ -1230,7 +1230,7 @@ e.g.
 
 sub plus_months {
     my ($self, $months) = @_;
-    (looks_like_number($months) && $months == int($months)) || die "Need a integer months number";
+    (looks_like_number($months) && $months == int($months)) || die "Need an integer months number";
     my $new_year  = $self->year;
     my $new_month = $self->month + $months;
     if ($new_month < 1 || $new_month > 12) {
@@ -1282,7 +1282,7 @@ Takes the following argument as named parameter:
 
 =item * C<month> - calendar month of the date. (Integer)
 
-=item * C<day> - day of the month of the date (Integer)
+=item * C<day> - day of the month of the date. (Integer)
 
 =back
 
