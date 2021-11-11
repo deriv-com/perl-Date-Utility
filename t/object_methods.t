@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 16;
+use Test::More tests => 17;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -226,6 +226,15 @@ subtest add_subract_months => sub {
     $date = Date::Utility->new('2002-03-02');
     $next_year = $date->minus_months(1);
     is($next_year->date_yyyymmdd(), '2002-02-02');
+};
+
+subtest create_trimmed_date => sub {
+    my $date = Date::Utility->new('03-Feb-12 03:04:05GMT');
+    my $new_date = $date->create_trimmed_date(2021, 4, 1);
+    is($new_date->datetime_yyyymmdd_hhmmss(), '2021-04-01 03:04:05');
+    
+    $new_date = $date->create_trimmed_date(2021, 4, 32);
+    is($new_date->datetime_yyyymmdd_hhmmss(), '2021-04-30 03:04:05');
 };
 
 1;
