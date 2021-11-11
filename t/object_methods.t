@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::NoWarnings;
 use Date::Utility;
 
@@ -190,6 +190,24 @@ subtest 'move_to_nth_dow' => sub {
 subtest truncate_to_month => sub {
     my $d = Date::Utility->new('2001-03-02');
     is($d->truncate_to_month->datetime_yyyymmdd_hhmmss, '2001-03-01 00:00:00');
+};
+
+subtest add_subract_years => sub {
+    my $date = Date::Utility->new('2001-03-02');
+    my $next_year = $date->plus_years(1);
+    is($next_year->date_yyyymmdd(), '2002-03-02');
+    
+    $date = Date::Utility->new('2000-02-29');
+    $next_year = $date->plus_years(1);
+    is($next_year->date_yyyymmdd(), '2001-02-28');
+    
+    $date = Date::Utility->new('2001-02-28');
+    $next_year = $date->minus_years(1);
+    is($next_year->date_yyyymmdd(), '2000-02-28');
+    
+    $date = Date::Utility->new('2002-03-02');
+    $next_year = $date->minus_years(1);
+    is($next_year->date_yyyymmdd(), '2001-03-02');
 };
 
 1;
