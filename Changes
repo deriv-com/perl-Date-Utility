@@ -1,6 +1,8 @@
 Revision history for Date-Utility
 
 {{$NEXT}}
+
+1.10      2021-11-23 09:10:32+00:00 UTC
         Correct typo in _parse_datetime_parm method pod. Changed it to _parse_datetime_param.
         Add alias for earlier private methods _plus_years, _minus_years, _plus_months, _minus_months, _create_trimmed_date
 
