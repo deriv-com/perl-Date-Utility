@@ -454,7 +454,7 @@ sub new {
 
 }
 
-=head2 _parse_datetime_parm
+=head2 _parse_datetime_param
 
 User may supplies datetime parameters but it currently only supports the following formats:
 dd-mmm-yy ddhddGMT, dd-mmm-yy, dd-mmm-yyyy, dd-Mmm-yy hh:mm:ssGMT, YYYY-MM-DD, YYYYMMDD, YYYYMMDDHHMMSS, yyyy-mm-dd hh:mm:ss, yyyy-mm-ddThh:mm:ss or yyyy-mm-ddThh:mm:ssZ.
@@ -1157,52 +1157,80 @@ sub today {
     return $today_obj;
 }
 
-=head2 _plus_years
+=head2 plus_years
+
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of years to be added. (Integer)
+
+=back
 
 Returns a new L<Date::Utility> object plus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
-    print Date::Utility->new('2000-02-29')->_plus_years(1)->date_yyyymmdd;
-    # will got 2001-02-28
+    print Date::Utility->new('2000-02-29')->plus_years(1)->date_yyyymmdd;
+    # will print 2001-02-28
 
 =cut
 
-sub _plus_years {
+sub plus_years {
     my ($self, $years) = @_;
-    die "Need a integer years number"
+    die "Need an integer years number"
         unless looks_like_number($years)
         and $years == int($years);
     return $self->_create_trimmed_date($self->year + $years, $self->month, $self->day_of_month);
 }
 
-=head2 _minus_years
+*_plus_years = \&plus_years;
+
+=head2 minus_years
+
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of years to be subracted. (Integer)
+
+=back
 
 Returns a new L<Date::Utility> object minus the given years. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-02-29')->minus_years(1)->date_yyyymmdd;
-    # will got 1999-02-28
+    # will print 1999-02-28
 
 =cut
 
-sub _minus_years {
+sub minus_years {
     my ($self, $years) = @_;
     return $self->_plus_years(-$years);
 }
 
-=head2 _plus_months
+*_minus_years = \&minus_years;
+
+=head2 plus_months
+
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of months to be added. (Integer)
+
+=back
 
 Returns a new L<Date::Utility> object plus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-01-31')->plus_months(1)->date_yyyymmdd;
-    # will got 2000-02-28
+    # will print 2000-02-28
 
 =cut
 
-sub _plus_months {
+sub plus_months {
     my ($self, $months) = @_;
-    (looks_like_number($months) && $months == int($months)) || die "Need a integer months number";
+    (looks_like_number($months) && $months == int($months)) || die "Need an integer months number";
     my $new_year  = $self->year;
     my $new_month = $self->month + $months;
     if ($new_month < 1 || $new_month > 12) {
@@ -1217,34 +1245,60 @@ sub _plus_months {
     return $self->_create_trimmed_date($new_year, $new_month, $new_day);
 }
 
-=head2 _minus_months
+*_plus_months = \&plus_months;
+
+=head2 minus_months
+
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<years> - number of months to be subracted. (Integer)
+
+=back
 
 Returns a new L<Date::Utility> object minus the given months. If the day is greater than days in the new month, it will take the day of end month.
 e.g.
 
     print Date::Utility->new('2000-03-31')->minus_months(1)->date_yyyymmdd;
-    # will got 2000-02-28
+    # will print 2000-02-28
 
 =cut
 
-sub _minus_months {
+sub minus_months {
     my ($self, $months) = @_;
     return $self->_plus_months(-$months);
 }
 
-=head2 _create_trimmed_date
+*_minus_months = \&minus_months;
 
-Return a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
+=head2 create_trimmed_date
+
+Takes the following argument as named parameter:
+
+=over 4
+
+=item * C<year> - calendar year of the date (Integer)
+
+=item * C<month> - calendar month of the date. (Integer)
+
+=item * C<day> - day of the month of the date. (Integer)
+
+=back
+
+Returns a valid L<Date::Utility> object whose date part is same with the given year, month and day and time part is not changed. If the day is greater than the max day in that month , then use that max day as the day in the new object.
 
 =cut
 
-sub _create_trimmed_date {
+sub create_trimmed_date {
     my ($self, $year, $month, $day) = @_;
     my $max_day = __PACKAGE__->new(sprintf("%04d-%02d-01", $year, $month))->days_in_month;
     $day = $day < $max_day ? $day : $max_day;
     my $date_string = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year, $month, $day, $self->hour, $self->minute, $self->second);
     return __PACKAGE__->new($date_string);
 }
+
+*_create_trimmed_date = \&create_trimmed_date;
 
 no Moose;
 
