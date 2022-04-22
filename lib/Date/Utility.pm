@@ -987,6 +987,7 @@ sub move_to_nth_dow {
     my $dow_first = (7 - ($self->day_of_month - 1 - $self->day_of_week)) % 7;
     my $dom       = ($dow + 7 - $dow_first) % 7 + ($nth - 1) * 7 + 1;
 
+    ## no critic (RequireCheckingReturnValueOfEval)
     return eval { Date::Utility->new(join '-', $self->year, $self->month, $dom) };
 }
 
