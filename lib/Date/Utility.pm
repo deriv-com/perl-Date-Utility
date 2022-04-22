@@ -416,6 +416,7 @@ Returns a Date::Utility object.
 
 =cut
 
+## no critic (ProhibitNewMethod)
 sub new {
     my ($self, $params_ref) = @_;
     my $new_params = {};
