@@ -11,7 +11,7 @@ Date::Utility - A class that represents a datetime in various format
 
 =cut
 
-our $VERSION = '1.09';
+our $VERSION = '1.10';
 
 =head1 SYNOPSIS
 
