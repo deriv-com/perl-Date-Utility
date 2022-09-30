@@ -28,7 +28,7 @@ on test => sub {
     requires 'Test::MockTime', '>= 0.15';
     requires 'Test::NoWarnings', 0;
     requires 'Test::Exception', 0;
-    requires 'Test::TestDeps';
+    requires 'Test::CheckDeps';
     recommends 'CPAN::Meta', '2.120900';
 };
 
