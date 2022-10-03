@@ -36,8 +36,8 @@ A class that represents a datetime in various format
 =cut
 
 use Moose;
-use Carp qw( confess croak );
-use POSIX qw( floor );
+use Carp         qw( confess croak );
+use POSIX        qw( floor );
 use Scalar::Util qw(looks_like_number);
 use Tie::Hash::LRU;
 use Time::Local qw(timegm);
@@ -96,7 +96,7 @@ has [qw(
         seconds_after_midnight
         is_a_weekend
         is_a_weekday
-        )
+    )
 ] => (
     is         => 'ro',
     lazy_build => 1,
@@ -339,7 +339,6 @@ sub _build_date_ddmonthyyyy {
     return join(' ', ($self->day_of_month, $self->full_month_name, $self->year));
 }
 
-
 =head2 date
 
 Returns datetime in YYYY-MM-DD format
@@ -479,7 +478,7 @@ sub _parse_datetime_param {
 
     # If it's date only, take the epoch at midnight.
     my ($hour, $minute, $second) = (0, 0, 0);
-    my ($day, $month, $year);
+    my ($day,  $month,  $year);
 
     # The ordering of these regexes is an attempt to match early
     # to avoid extra comparisons.  If our mix of supplied datetimes changes
@@ -1066,7 +1065,7 @@ my %number_fullname_map = (
 
 sub month_number_to_fullname {
 
-     return $number_fullname_map{int shift};
+    return $number_fullname_map{int shift};
 }
 
 =head2 is_epoch_timestamp
