@@ -29,6 +29,7 @@ on test => sub {
     requires 'Test::NoWarnings', 0;
     requires 'Test::Exception', 0;
     requires 'Test::CheckDeps';
+    requires 'Test::Pod::LinkCheck';
     recommends 'CPAN::Meta', '2.120900';
 };
 
