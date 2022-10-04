@@ -19,6 +19,8 @@ alias:
         # dzil listdeps --missing here
         # dzil listdeps --author --missing --cpanm-versions | xargs cpanm -n
         cpanm --installdeps .
+        dzil listdeps --author --missing --cpanm-versions | xargs cpanm -n
+
  
 jobs:
   test:
