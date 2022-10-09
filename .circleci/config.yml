@@ -16,11 +16,9 @@ alias:
       name: Install dist deps
       command: |
         # see https://github.com/team-at-cpan/Dist-Zilla-Plugin-PodInherit/issues/1 to check why we not use 
-        # dzil listdeps --missing here
-        # dzil listdeps --author --missing --cpanm-versions | xargs cpanm -n
+        # dzil listdeps --missing directly here
         cpanm --installdeps .
         dzil listdeps --author --missing --cpanm-versions | xargs cpanm -n
-
  
 jobs:
   test:
@@ -39,7 +37,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            dzil smoke --release --author && dzil cover -test && dzil xtest
+            dzil smoke --release --author && dzil cover -test -report codecov && dzil xtest
   release:
     docker:
       - image: perldocker/perl-tester:5.34
@@ -68,8 +66,9 @@ jobs:
                 echo "No changes, no need release"
                 exit 0
             fi
+            # use git push to test permission
+            git push github master
             echo "y\n" | DZIL_CONFIRMRELEASE_DEFAULT=y dzil release
-            git push
 
 workflows:
   build-workflow:
