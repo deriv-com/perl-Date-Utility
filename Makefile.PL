@@ -4,13 +4,13 @@ use warnings;
 
 use 5.010000;
 
-use ExtUtils::MakeMaker 6.48;
+use ExtUtils::MakeMaker 7.64;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A class that represents a datetime in various format",
-  "AUTHOR" => "binary.com <cpan\@binary.com>",
+  "AUTHOR" => "DERIV <DERIV\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => "6.48"
+    "ExtUtils::MakeMaker" => "7.64"
   },
   "DISTNAME" => "Date-Utility",
   "LICENSE" => "perl",
@@ -19,6 +19,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Carp" => 0,
     "DateTime" => 0,
+    "DateTime::TimeZone" => 0,
     "Moose" => 0,
     "POSIX" => 0,
     "Scalar::Util" => 0,
@@ -26,7 +27,10 @@ my %WriteMakefileArgs = (
     "Tie::Hash::LRU" => 0,
     "Time::Duration::Concise::Localize" => "2.5",
     "Time::Local" => 0,
-    "Time::Piece" => 0
+    "Time::Piece" => 0,
+    "feature" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
   "TEST_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0,
@@ -37,10 +41,11 @@ my %WriteMakefileArgs = (
     "Test::Exception" => 0,
     "Test::MockTime" => "0.15",
     "Test::More" => "0.98",
-    "Test::Most" => 0,
-    "Test::NoWarnings" => 0
+    "Test::Most" => "0.22",
+    "Test::NoWarnings" => 0,
+    "charnames" => 0
   },
-  "VERSION" => "1.09",
+  "VERSION" => "1.12",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -50,6 +55,7 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "Carp" => 0,
   "DateTime" => 0,
+  "DateTime::TimeZone" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
@@ -62,12 +68,16 @@ my %FallbackPrereqs = (
   "Test::Exception" => 0,
   "Test::MockTime" => "0.15",
   "Test::More" => "0.98",
-  "Test::Most" => 0,
+  "Test::Most" => "0.22",
   "Test::NoWarnings" => 0,
   "Tie::Hash::LRU" => 0,
   "Time::Duration::Concise::Localize" => "2.5",
   "Time::Local" => 0,
-  "Time::Piece" => 0
+  "Time::Piece" => 0,
+  "charnames" => 0,
+  "feature" => 0,
+  "strict" => 0,
+  "warnings" => 0
 );
 
 

@@ -1,6 +1,8 @@
 Revision history for Date-Utility
 
 {{$NEXT}}
+
+1.11      2022-10-17 14:32:15+00:00 UTC
     - Replace Try::Tiny with Syntax::Keyword::Try
 
 1.10      2021-11-23 09:10:32+00:00 UTC
