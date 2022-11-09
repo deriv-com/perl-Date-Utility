@@ -33,11 +33,11 @@ is(Date::Utility::month_number_to_abbrev(13),    undef, '13 is not a month');
 
 # month_number_to_fullname
 is(Date::Utility::month_number_to_fullname(01),    'January', '01 is January');
-is(Date::Utility::month_number_to_fullname(7),     'July', '7 is July');
-is(Date::Utility::month_number_to_fullname(00004), 'April', '00004 is April');
-is(Date::Utility::month_number_to_fullname(-1),    undef, '-1 is not a month');
-is(Date::Utility::month_number_to_fullname(0),     undef, '0 is not a month');
-is(Date::Utility::month_number_to_fullname(13),    undef, '13 is not a month');
+is(Date::Utility::month_number_to_fullname(7),     'July',    '7 is July');
+is(Date::Utility::month_number_to_fullname(00004), 'April',   '00004 is April');
+is(Date::Utility::month_number_to_fullname(-1),    undef,     '-1 is not a month');
+is(Date::Utility::month_number_to_fullname(0),     undef,     '0 is not a month');
+is(Date::Utility::month_number_to_fullname(13),    undef,     '13 is not a month');
 
 # month_abbrev_to_number
 is(Date::Utility::month_abbrev_to_number('Jun'),  6,     'Jun is 6');
