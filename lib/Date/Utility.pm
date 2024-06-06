@@ -407,7 +407,8 @@ sub _build_is_a_weekday {
     return ($self->is_a_weekend) ? 0 : 1;
 }
 
-my $EPOCH_RE = qr/^-?[0-9]{1,13}$/;
+use constant EPOCH_RE         => qr/^-?[0-9]{1,13}$/o;
+use constant EPOCH_MAYBE_FRAC => qr/^-?[0-9]{1,13}(?:\.[0-9]+)?$/o;
 
 =head2 new
 
@@ -437,21 +438,14 @@ sub new {
             #strip other potential parameters
             $new_params = _parse_datetime_param($params_ref->{'datetime'});
         }
-    } elsif ($params_ref =~ $EPOCH_RE) {
-        $new_params->{epoch} = $params_ref;
+    } elsif ($params_ref =~ EPOCH_MAYBE_FRAC) {
+        # We cannot handle fractional seconds, so truncated if necessary
+        $new_params->{epoch} = int($params_ref);
     } else {
         $new_params = _parse_datetime_param($params_ref);
     }
 
-    my $obj = $popular{$new_params->{epoch}};
-
-    if (not $obj) {
-        $obj = $self->_new($new_params);
-        $popular{$new_params->{epoch}} = $obj;
-    }
-
-    return $obj;
-
+    return $popular{$new_params->{epoch}} //= $self->_new($new_params);
 }
 
 =head2 _parse_datetime_param
@@ -462,16 +456,17 @@ dd-mmm-yy ddhddGMT, dd-mmm-yy, dd-mmm-yyyy, dd-Mmm-yy hh:mm:ssGMT, YYYY-MM-DD, Y
 
 =cut
 
-my $mon_re             = qr/j(?:an|u[nl])|feb|ma[ry]|a(?:pr|ug)|sep|oct|nov|dec/i;
-my $sub_second         = qr/^[0-9]+\.[0-9]+$/;
-my $date_only          = qr/^([0-3]?[0-9])-($mon_re)-([0-9]{2}|[0-9]{4})$/;
-my $time_only_tz       = qr/([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:GMT)?/;
-my $date_with_time     = qr /^([0-3]?[0-9])-($mon_re)-([0-9]{2}) $time_only_tz$/;
-my $numeric_date_regex = qr/([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])/;
-my $numeric_date_only  = qr/^$numeric_date_regex$/;
-my $fully_specced      = qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])(?:T|\s)?([0-2]?[0-9]):?([0-5]?[0-9]):?([0-5]?[0-9])(\.[0-9]+)?(?:Z)?$/;
-my $numeric_date_only_dd_mm_yyyy = qr/^([0-3]?[0-9])-([01]?[0-9])-([12][0-9]{3})$/;
-my $datetime_yyyymmdd_hhmmss_TZ  = qr/^$numeric_date_regex $time_only_tz$/;
+# The below are for debugging interest, since `use constant` is a source pragma
+# my $mon_re             = qr/j(?:an|u[nl])|feb|ma[ry]|a(?:pr|ug)|sep|oct|nov|dec/i;
+# my $time_only_tz       = qr/([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:GMT)?/;
+# my $numeric_date_regex = qr/([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])/;
+use constant TEXT_DATE_ONLY => qr/^([0-3]?[0-9])-(j(?:an|u[nl])|feb|ma[ry]|a(?:pr|ug)|sep|oct|nov|dec)-([0-9]{2}|[0-9]{4})$/io;
+use constant TEXT_DATE_TIME =>
+    qr /^([0-3]?[0-9])-(j(?:an|u[nl])|feb|ma[ry]|a(?:pr|ug)|sep|oct|nov|dec)-([0-9]{2}) ([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:GMT)?/io;
+use constant NUMERIC_DATE_ONLY => qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])$/o;
+use constant NUMERIC_DATE_REV  => qr/^([0-3]?[0-9])-([01]?[0-9])-([12][0-9]{3})$/o;
+use constant NUMERIC_DATE_TIME => qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9]) ([0-2]?[0-9])[h:]([0-5][0-9])(?::)?([0-5][0-9])?(?:GMT)?$/o;
+use constant FULLY_SPECCED => qr/^([12][0-9]{3})-?([01]?[0-9])-?([0-3]?[0-9])(?:T|\s)?([0-2]?[0-9]):?([0-5]?[0-9]):?([0-5]?[0-9])(\.[0-9]+)?(?:Z)?$/o;
 
 sub _parse_datetime_param {
     my $datetime = shift;
@@ -483,14 +478,11 @@ sub _parse_datetime_param {
     # The ordering of these regexes is an attempt to match early
     # to avoid extra comparisons.  If our mix of supplied datetimes changes
     # it might be worth revisiting this.
-    if ($datetime =~ $sub_second) {
-        # We have an epoch with sub second precision which we can't handle
-        return {epoch => int($datetime)};
-    } elsif ($datetime =~ $date_only) {
+    if ($datetime =~ TEXT_DATE_ONLY) {
         $day   = $1;
         $month = month_abbrev_to_number($2);
         $year  = $3;
-    } elsif ($datetime =~ $date_with_time) {
+    } elsif ($datetime =~ TEXT_DATE_TIME) {
         $day    = $1;
         $month  = month_abbrev_to_number($2);
         $year   = $3;
@@ -499,22 +491,22 @@ sub _parse_datetime_param {
         if (defined $6) {
             $second = $6;
         }
-    } elsif ($datetime =~ $numeric_date_only) {
+    } elsif ($datetime =~ NUMERIC_DATE_ONLY) {
         $day   = $3;
         $month = $2;
         $year  = $1;
-    } elsif ($datetime =~ $numeric_date_only_dd_mm_yyyy) {
+    } elsif ($datetime =~ NUMERIC_DATE_REV) {
         $day   = $1;
         $month = $2;
         $year  = $3;
-    } elsif ($datetime =~ $fully_specced) {
+    } elsif ($datetime =~ FULLY_SPECCED) {
         $day    = $3;
         $month  = $2;
         $year   = $1;
         $hour   = $4;
         $minute = $5;
         $second = $6;
-    } elsif ($datetime =~ $datetime_yyyymmdd_hhmmss_TZ) {
+    } elsif ($datetime =~ NUMERIC_DATE_TIME) {
         $year   = $1;
         $month  = $2;
         $day    = $3;
@@ -1075,7 +1067,7 @@ Check if a given datetime is an epoch timestemp, i.e. an integer of under 14 dig
 =cut
 
 sub is_epoch_timestamp {
-    return (shift // '') =~ $EPOCH_RE;
+    return (shift // '') =~ EPOCH_RE;
 }
 
 =head2 is_ddmmmyy
