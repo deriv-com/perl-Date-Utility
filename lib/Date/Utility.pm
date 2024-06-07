@@ -35,7 +35,7 @@ A class that represents a datetime in various format
 
 =cut
 
-use Moose;
+use Moo;
 use Carp         qw( confess croak );
 use POSIX        qw( floor );
 use Scalar::Util qw(looks_like_number);
@@ -46,7 +46,6 @@ use POSIX qw(floor);
 
 has epoch => (
     is       => 'ro',
-    isa      => 'Int',
     required => 1,
 );
 
@@ -94,8 +93,7 @@ has [qw(
         is_a_weekday
     )
 ] => (
-    is         => 'ro',
-    lazy_build => 1,
+    is => 'lazy',
 );
 
 sub _build__gmtime_attrs {
@@ -403,24 +401,23 @@ sub _build_is_a_weekday {
     return ($self->is_a_weekend) ? 0 : 1;
 }
 
-use constant EPOCH_RE         => qr/^-?[0-9]{1,13}$/o;
-use constant EPOCH_MAYBE_FRAC => qr/^-?[0-9]{1,13}(?:\.[0-9]+)?$/o;
-
 =head2 new
 
 Returns a Date::Utility object.
 
 =cut
 
-## no critic (ProhibitNewMethod)
-sub new {
-    my ($self, $params_ref) = @_;
+use constant EPOCH_RE         => qr/^-?[0-9]{1,13}$/o;
+use constant EPOCH_MAYBE_FRAC => qr/^-?[0-9]{1,13}(?:\.[0-9]+)?$/o;
+
+sub BUILDARGS {
+    my ($class, $params_ref) = @_;
     my $new_params = {};
 
     if (not defined $params_ref) {
         $new_params->{epoch} = time;
-    } elsif (ref $params_ref eq 'Date::Utility') {
-        return $params_ref;
+    } elsif (ref $params_ref eq $class) {
+        $new_params->{epoch} = $params_ref->epoch;
     } elsif (ref $params_ref eq 'HASH') {
         if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
             confess 'Must pass either datetime or epoch to the Date object constructor';
@@ -441,7 +438,7 @@ sub new {
         $new_params = _parse_datetime_param($params_ref);
     }
 
-    return $self->_new($new_params);
+    return $new_params;
 }
 
 =head2 _parse_datetime_param
@@ -1289,12 +1286,6 @@ sub create_trimmed_date {
 
 *_create_trimmed_date = \&create_trimmed_date;
 
-no Moose;
-
-__PACKAGE__->meta->make_immutable(
-    constructor_name    => '_new',
-    replace_constructor => 1
-);
 1;
 __END__
 
@@ -1302,15 +1293,13 @@ __END__
 
 =over 4
 
-=item L<Moose>
+=item L<Moo>
 
 =item L<DateTime>
 
 =item L<POSIX>
 
 =item L<Scalar::Util>
-
-=item L<Tie::Hash::LRU>
 
 =item L<Time::Local>
 
