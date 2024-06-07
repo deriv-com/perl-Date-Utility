@@ -39,14 +39,10 @@ use Moose;
 use Carp         qw( confess croak );
 use POSIX        qw( floor );
 use Scalar::Util qw(looks_like_number);
-use Tie::Hash::LRU;
-use Time::Local qw(timegm);
+use Time::Local  qw(timegm);
 use Syntax::Keyword::Try;
 use Time::Duration::Concise::Localize;
 use POSIX qw(floor);
-
-my %popular;
-my $lru = tie %popular, 'Tie::Hash::LRU', 300;
 
 has epoch => (
     is       => 'ro',
@@ -445,7 +441,7 @@ sub new {
         $new_params = _parse_datetime_param($params_ref);
     }
 
-    return $popular{$new_params->{epoch}} //= $self->_new($new_params);
+    return $self->_new($new_params);
 }
 
 =head2 _parse_datetime_param

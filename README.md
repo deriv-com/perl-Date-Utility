@@ -333,7 +333,6 @@ Returns a valid [Date::Utility](https://metacpan.org/pod/Date%3A%3AUtility) obje
 - [DateTime](https://metacpan.org/pod/DateTime)
 - [POSIX](https://metacpan.org/pod/POSIX)
 - [Scalar::Util](https://metacpan.org/pod/Scalar%3A%3AUtil)
-- [Tie::Hash::LRU](https://metacpan.org/pod/Tie%3A%3AHash%3A%3ALRU)
 - [Time::Local](https://metacpan.org/pod/Time%3A%3ALocal)
 - [Syntax::Keyword::Try](https://metacpan.org/pod/Syntax%3A%3AKeyword%3A%3ATry)
 
