@@ -412,33 +412,23 @@ use constant EPOCH_MAYBE_FRAC => qr/^-?[0-9]{1,13}(?:\.[0-9]+)?$/o;
 
 sub BUILDARGS {
     my ($class, $params_ref) = @_;
-    my $new_params = {};
 
-    if (not defined $params_ref) {
-        $new_params->{epoch} = time;
-    } elsif (ref $params_ref eq $class) {
-        $new_params->{epoch} = $params_ref->epoch;
-    } elsif (ref $params_ref eq 'HASH') {
-        if (not($params_ref->{'datetime'} or $params_ref->{epoch})) {
-            confess 'Must pass either datetime or epoch to the Date object constructor';
-        } elsif ($params_ref->{'datetime'} and $params_ref->{epoch}) {
-            confess 'Must pass only one of datetime or epoch to the Date object constructor';
-        } elsif ($params_ref->{epoch}) {
-            #strip other potential parameters
-            $new_params->{epoch} = $params_ref->{epoch};
+    # Bare `->new`
+    return +{epoch => time} unless $params_ref;
+    # Provided epoch
+    # We cannot handle fractional seconds, so truncated if necessary
+    return +{epoch => int($params_ref)} if ($params_ref =~ EPOCH_MAYBE_FRAC);
+    # Specified with hashref
+    if (ref $params_ref eq 'HASH') {
+        my $in_epoch = $params_ref->{epoch};
+        my $in_dt    = $params_ref->{datetime};
 
-        } else {
-            #strip other potential parameters
-            $new_params = _parse_datetime_param($params_ref->{'datetime'});
-        }
-    } elsif ($params_ref =~ EPOCH_MAYBE_FRAC) {
-        # We cannot handle fractional seconds, so truncated if necessary
-        $new_params->{epoch} = int($params_ref);
-    } else {
-        $new_params = _parse_datetime_param($params_ref);
+        confess 'Must pass exactly one of datetime or epoch to the hashref Date object constructor' unless $in_dt xor $in_epoch;
+        #strip other potential parameters
+        return ($in_epoch) ? +{epoch => $in_epoch} : _parse_datetime_param($in_dt);
     }
-
-    return $new_params;
+    return +{epoch => $params_ref->epoch} if ref $params_ref eq $class;
+    return _parse_datetime_param($params_ref);
 }
 
 =head2 _parse_datetime_param
