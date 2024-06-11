@@ -465,6 +465,14 @@ sub _parse_datetime_param {
         $day   = $1;
         $month = month_abbrev_to_number($2);
         $year  = $3;
+    } elsif ($datetime =~ NUMERIC_DATE_ONLY) {
+        $day   = $3;
+        $month = $2;
+        $year  = $1;
+    } elsif ($datetime =~ NUMERIC_DATE_REV) {
+        $day   = $1;
+        $month = $2;
+        $year  = $3;
     } elsif ($datetime =~ TEXT_DATE_TIME) {
         $day    = $1;
         $month  = month_abbrev_to_number($2);
@@ -474,14 +482,6 @@ sub _parse_datetime_param {
         if (defined $6) {
             $second = $6;
         }
-    } elsif ($datetime =~ NUMERIC_DATE_ONLY) {
-        $day   = $3;
-        $month = $2;
-        $year  = $1;
-    } elsif ($datetime =~ NUMERIC_DATE_REV) {
-        $day   = $1;
-        $month = $2;
-        $year  = $3;
     } elsif ($datetime =~ FULLY_SPECCED) {
         $day    = $3;
         $month  = $2;
@@ -496,9 +496,7 @@ sub _parse_datetime_param {
         $hour   = $4;
         $minute = $5;
         $second = $6;
-    }
-    # Type constraints mean we can't ever end up in here.
-    else {
+    } else {
         confess "Invalid datetime format: $datetime";
     }
 
