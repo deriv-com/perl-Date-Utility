@@ -7,82 +7,89 @@ use 5.010000;
 use ExtUtils::MakeMaker 7.64;
 
 my %WriteMakefileArgs = (
-    "ABSTRACT"           => "A class that represents a datetime in various format",
-    "AUTHOR"             => "binary.com <BINARY\@cpan.org>",
-    "CONFIGURE_REQUIRES" => {"ExtUtils::MakeMaker" => "7.64"},
-    "DISTNAME"           => "Date-Utility",
-    "LICENSE"            => "perl",
-    "MIN_PERL_VERSION"   => "5.010000",
-    "NAME"               => "Date::Utility",
-    "PREREQ_PM"          => {
-        "Carp"                              => 0,
-        "DateTime"                          => 0,
-        "DateTime::TimeZone"                => 0,
-        "Moo"                               => 0,
-        "Moose"                             => 0,
-        "POSIX"                             => 0,
-        "Scalar::Util"                      => 0,
-        "Syntax::Keyword::Try"              => 0,
-        "Time::Duration::Concise::Localize" => "2.5",
-        "Time::Local"                       => 0,
-        "Time::Piece"                       => 0,
-        "constant"                          => 0,
-        "feature"                           => 0,
-        "strict"                            => 0,
-        "warnings"                          => 0
-    },
-    "TEST_REQUIRES" => {
-        "ExtUtils::MakeMaker" => 0,
-        "File::Spec"          => 0,
-        "IO::Handle"          => 0,
-        "IPC::Open3"          => 0,
-        "Test::CheckDeps"     => "0.010",
-        "Test::Exception"     => 0,
-        "Test::MockTime"      => "0.15",
-        "Test::More"          => "0.98",
-        "Test::Most"          => "0.22",
-        "Test::NoWarnings"    => 0,
-        "charnames"           => 0
-    },
-    "VERSION" => "1.12",
-    "test"    => {"TESTS" => "t/*.t"});
-
-my %FallbackPrereqs = (
-    "Carp"                              => 0,
-    "DateTime"                          => 0,
-    "DateTime::TimeZone"                => 0,
-    "ExtUtils::MakeMaker"               => 0,
-    "File::Spec"                        => 0,
-    "IO::Handle"                        => 0,
-    "IPC::Open3"                        => 0,
-    "Moo"                               => 0,
-    "Moose"                             => 0,
-    "POSIX"                             => 0,
-    "Scalar::Util"                      => 0,
-    "Syntax::Keyword::Try"              => 0,
-    "Test::CheckDeps"                   => "0.010",
-    "Test::Exception"                   => 0,
-    "Test::MockTime"                    => "0.15",
-    "Test::More"                        => "0.98",
-    "Test::Most"                        => "0.22",
-    "Test::NoWarnings"                  => 0,
+  "ABSTRACT" => "A class that represents a datetime in various format",
+  "AUTHOR" => "binary.com <BINARY\@cpan.org>",
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "7.64"
+  },
+  "DISTNAME" => "Date-Utility",
+  "LICENSE" => "perl",
+  "MIN_PERL_VERSION" => "5.010000",
+  "NAME" => "Date::Utility",
+  "PREREQ_PM" => {
+    "Carp" => 0,
+    "DateTime" => 0,
+    "DateTime::TimeZone" => 0,
+    "Moo" => 0,
+    "Moose" => 0,
+    "POSIX" => 0,
+    "Scalar::Util" => 0,
+    "Syntax::Keyword::Try" => 0,
     "Time::Duration::Concise::Localize" => "2.5",
-    "Time::Local"                       => 0,
-    "Time::Piece"                       => 0,
-    "charnames"                         => 0,
-    "constant"                          => 0,
-    "feature"                           => 0,
-    "strict"                            => 0,
-    "warnings"                          => 0
+    "Time::Local" => 0,
+    "Time::Piece" => 0,
+    "constant" => 0,
+    "feature" => 0,
+    "strict" => 0,
+    "warnings" => 0
+  },
+  "TEST_REQUIRES" => {
+    "ExtUtils::MakeMaker" => 0,
+    "File::Spec" => 0,
+    "IO::Handle" => 0,
+    "IPC::Open3" => 0,
+    "Test::CheckDeps" => "0.010",
+    "Test::Exception" => 0,
+    "Test::MockTime" => "0.15",
+    "Test::More" => "0.98",
+    "Test::Most" => "0.22",
+    "Test::NoWarnings" => 0,
+    "charnames" => 0
+  },
+  "VERSION" => "1.12",
+  "test" => {
+    "TESTS" => "t/*.t"
+  }
 );
 
-unless (eval { ExtUtils::MakeMaker->VERSION(6.63_03) }) {
-    delete $WriteMakefileArgs{TEST_REQUIRES};
-    delete $WriteMakefileArgs{BUILD_REQUIRES};
-    $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
+
+my %FallbackPrereqs = (
+  "Carp" => 0,
+  "DateTime" => 0,
+  "DateTime::TimeZone" => 0,
+  "ExtUtils::MakeMaker" => 0,
+  "File::Spec" => 0,
+  "IO::Handle" => 0,
+  "IPC::Open3" => 0,
+  "Moo" => 0,
+  "Moose" => 0,
+  "POSIX" => 0,
+  "Scalar::Util" => 0,
+  "Syntax::Keyword::Try" => 0,
+  "Test::CheckDeps" => "0.010",
+  "Test::Exception" => 0,
+  "Test::MockTime" => "0.15",
+  "Test::More" => "0.98",
+  "Test::Most" => "0.22",
+  "Test::NoWarnings" => 0,
+  "Time::Duration::Concise::Localize" => "2.5",
+  "Time::Local" => 0,
+  "Time::Piece" => 0,
+  "charnames" => 0,
+  "constant" => 0,
+  "feature" => 0,
+  "strict" => 0,
+  "warnings" => 0
+);
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
+  delete $WriteMakefileArgs{TEST_REQUIRES};
+  delete $WriteMakefileArgs{BUILD_REQUIRES};
+  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
 }
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
-    unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
 
 WriteMakefile(%WriteMakefileArgs);
