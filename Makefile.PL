@@ -8,7 +8,7 @@ use ExtUtils::MakeMaker 7.64;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A class that represents a datetime in various format",
-  "AUTHOR" => "binary.com <BINARY\@cpan.org>",
+  "AUTHOR" => "deriv.com <DERIV\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "7.64"
   },
@@ -46,7 +46,7 @@ my %WriteMakefileArgs = (
     "Test::NoWarnings" => 0,
     "charnames" => 0
   },
-  "VERSION" => "1.12",
+  "VERSION" => "1.13",
   "test" => {
     "TESTS" => "t/*.t"
   }

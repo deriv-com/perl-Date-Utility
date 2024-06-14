@@ -1,6 +1,8 @@
 Revision history for Date-Utility
 
 {{$NEXT}}
+
+1.12      2024-06-14 08:30:42+02:00 Africa/Maputo
 	Remove dependency on Tie::Hash::LRU
 	Switch dependency from Moose to Moo
 	Improve datatime parsing performance

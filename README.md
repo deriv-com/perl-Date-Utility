@@ -329,7 +329,7 @@ Returns a valid [Date::Utility](https://metacpan.org/pod/Date%3A%3AUtility) obje
 
 # DEPENDENCIES
 
-- [Moose](https://metacpan.org/pod/Moose)
+- [Moo](https://metacpan.org/pod/Moo)
 - [DateTime](https://metacpan.org/pod/DateTime)
 - [POSIX](https://metacpan.org/pod/POSIX)
 - [Scalar::Util](https://metacpan.org/pod/Scalar%3A%3AUtil)
