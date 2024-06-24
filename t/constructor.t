@@ -22,6 +22,37 @@ throws_ok { Date::Utility->new("2001-12-44") } qr/Invalid datetime format/,     
 throws_ok { Date::Utility->new("2001-12-31 23:59:61") } qr/Invalid datetime format/,           'not accepting 61 as a value for seconds';
 throws_ok { Date::Utility->new('4-Jun-54') } qr/only supports two-digit years from 1970-2030/, 'No two digit years between 30 and 70';
 throws_ok { Date::Utility->new('fake') } qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-2')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-22')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-2222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-22222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('20192')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-2')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-22')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-222')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019 23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019- 23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-2 23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-22  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-2222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019-22222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('20192  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('2019222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-2  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-22  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+throws_ok { Date::Utility->new('201922-222  23:59:59')} qr/Invalid datetime format/,                          'random string is not a date string';
+
 # Passy stuff
 new_ok('Date::Utility');
 new_ok(
